@@ -1,28 +1,20 @@
-class TwoWayMapInstructionToCode {
-    private mapItoC: Map<string, string>;
-    private mapCtoI: Map<string, string>;
+import { TwoWayMap } from "../dsa-util/map.ts";
 
-    constructor(pairs: [string, string][]) {
-        this.mapItoC = new Map<string, string>(pairs);
-        this.mapCtoI = new Map<string, string>(
-            pairs.map(([instr, code]) => [code, instr])
-        );
-    }
-
+class TwoWayMapInstructionToCode extends TwoWayMap<string, string> {
     getCode(instr: string): string | undefined {
-        return this.mapItoC.get(instr);
+        return this.getB(instr);
     }
 
     isValidInstruction(instr: string): boolean {
-        return this.mapItoC.has(instr);
+        return this.isValidA(instr);
     }
 
     getInstruction(code: string): string | undefined {
-        return this.mapCtoI.get(code);
+        return this.getA(code);
     }
 
     isValidCode(code: string): boolean {
-        return this.mapCtoI.has(code);
+        return this.isValidB(code);
     }
 }
 

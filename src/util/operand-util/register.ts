@@ -1,8 +1,28 @@
+import { TwoWayMap } from "../dsa-util/map.ts";
+
+class TwoWayMapRegisterToNumber extends TwoWayMap<string, number> {
+    getNumber(reg: string): number | undefined {
+        return this.getB(reg);
+    }
+
+    isValidRegister(reg: string): boolean {
+        return this.isValidA(reg);
+    }
+
+    getRegister(number: number): string | undefined {
+        return this.getA(number);
+    }
+
+    isValidNumber(number: number): boolean {
+        return this.isValidB(number);
+    }
+}
+
 class Register {
     private readonly _label: string;
     private readonly _number: number;
     private readonly _binaryString: string;
-    static readonly register_mapping: Map<string, number> = new Map([
+    static readonly register_mapping: TwoWayMapRegisterToNumber = new TwoWayMapRegisterToNumber([
         ["$zero", 0],
         ["$v0", 2],
         ["$v1", 3],
@@ -33,8 +53,8 @@ class Register {
 
     static parseRegister(reg: string): Register {
         let stripped: string = reg.trim().replace(/^\$/, "");
-        if (this.register_mapping.has(`$${stripped}`)) {
-            return new Register(`$${stripped}`, this.register_mapping.get(`$${stripped}`)!);
+        if (this.register_mapping.isValidRegister(`$${stripped}`)) {
+            return new Register(`$${stripped}`, this.register_mapping.getNumber(`$${stripped}`)!);
         }
         let regNum: number = parseInt(stripped, 10);
         if (isNaN(regNum)) {
