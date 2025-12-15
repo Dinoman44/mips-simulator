@@ -36,8 +36,10 @@ class RFormatEncodedInstruction extends EncodedInstruction {
         const [opcode, rs, rt, rd, shamt, funct] = this.parsedInstruction.parts();
         if (ShiftInstructionList.isValid(funct)) {
             // shift instruction: sll/srl rd, rt, shamt
-
+            const instr = ShiftInstructionList.getInstruction(funct);
+            const rdReg = null;
         }
+        return "";
     }
 }
 

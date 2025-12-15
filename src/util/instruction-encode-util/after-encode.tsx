@@ -37,7 +37,7 @@ class RformatAfterEncode extends InstructionAfterEncode {
         return (
             <>
                 <EncodedInstruction
-                    classes={["opcode", "rd", "rs", "rt", "shamt", "funct"]}
+                    classes={["opcode", "rs", "rt", "rd", "shamt", "funct"]}
                     parts={this._parts}
                     binString={this.encodedBinary()}
                     hexString={this.encodedHex()}
