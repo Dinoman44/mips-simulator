@@ -4,25 +4,28 @@ import { IFormatInstructionList, JFormatInstructionList, RFormatInstructionList,
 abstract class EncodedInstruction {
     protected readonly parsedInstruction: ParsedEncodedInstruction;
     protected readonly line: string;
+    protected readonly parts: string[];
 
     static makeInstruction(line: string): EncodedInstruction {
         const parsed = new ParsedEncodedInstruction(line);
         const opcode = parsed.getOpcode();
+        const parts = parsed.parts();
 
-        if (opcode === "000000" && parsed.parts().length === 6 && RFormatInstructionList.isValid(parsed.parts()[5])) {
-            return new RFormatEncodedInstruction(line);
-        } else if (IFormatInstructionList.isValid(opcode)) {
-            return new IFormatEncodedInstruction(line);
-        } else if (JFormatInstructionList.isValid(opcode)) {
-            return new JFormatEncodedInstruction(line);
+        if (parts.length === 6) {
+            return new RFormatEncodedInstruction(line, parsed);
+        } else if (parts.length === 4) {
+            return new IFormatEncodedInstruction(line, parsed);
+        } else if (parts.length === 2) {
+            return new JFormatEncodedInstruction(line, parsed);
         } else {
             throw new Error(`Opcode "${opcode}" is not a valid MIPS instruction opcode.`);
         }
     }
 
-    constructor(line: string) {
+    constructor(line: string, parsed: ParsedEncodedInstruction) {
         this.line = line;
-        this.parsedInstruction = new ParsedEncodedInstruction(this.line);
+        this.parsedInstruction = parsed;
+        this.parts = this.parsedInstruction.parts();
     }
 
     abstract decode(): string;
