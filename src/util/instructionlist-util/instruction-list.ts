@@ -46,6 +46,15 @@ class RFormatInstructionList {
     static getFunctCode(instr: string): string {
         return this.functCodeMapping.get(instr) || "";
     }
+
+    static getInstruction(functCode: string): string | null {
+        for (const [instr, code] of this.functCodeMapping.entries()) {
+            if (code === functCode) {
+                return instr;
+            }
+        }
+        return null;
+    }
 }
 
 class ShiftInstructionList extends RFormatInstructionList {
@@ -113,6 +122,15 @@ class IFormatInstructionList {
     static getOpcode(instr: string): string {
         return this.opcodeMapping.get(instr) || "";
     }
+
+    static getInstruction(opcode: string): string | null {
+        for (const [instr, code] of this.opcodeMapping.entries()) {
+            if (code === opcode) {
+                return instr;
+            }
+        }
+        return null;
+    }
 }
 
 class MemOpInstructionList extends IFormatInstructionList {
@@ -163,6 +181,15 @@ class JFormatInstructionList {
 
     static getOpcode(instr: string): string {
         return this.opcodeMapping.get(instr) || "";
+    }
+
+    static getInstruction(opcode: string): string | null {
+        for (const [instr, code] of this.opcodeMapping.entries()) {
+            if (code === opcode) {
+                return instr;
+            }
+        }
+        return null;
     }
 }
 

@@ -1,4 +1,4 @@
-import { RFormatInstructionList, IFormatInstructionList, JFormatInstructionList, ShiftInstructionList, MemOpInstructionList, BranchInstructionList, } from "./instruction-list.ts";
+import { RFormatInstructionList, IFormatInstructionList, JFormatInstructionList, ShiftInstructionList, MemOpInstructionList, BranchInstructionList, } from "../instructionlist-util/instruction-list.ts";
 import { ParsedInstruction } from "./instruction-parse.ts";
 import { Register } from "../operand-util/register.ts";
 import { Immediate, ShiftAmountImmediate, ITypeImmediate, JumpAddressImmediate } from "../operand-util/immediate.ts";
