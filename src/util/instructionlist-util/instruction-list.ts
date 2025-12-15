@@ -47,13 +47,13 @@ class RFormatInstructionList {
         return this.functCodeMapping.get(instr) || "";
     }
 
-    static getInstruction(functCode: string): string | null {
+    static getInstruction(functCode: string): string {
         for (const [instr, code] of this.functCodeMapping.entries()) {
             if (code === functCode) {
                 return instr;
             }
         }
-        return null;
+        throw new Error(`Funct code "${functCode}" is not a valid R-format funct code.`);
     }
 }
 
@@ -123,13 +123,13 @@ class IFormatInstructionList {
         return this.opcodeMapping.get(instr) || "";
     }
 
-    static getInstruction(opcode: string): string | null {
+    static getInstruction(opcode: string): string {
         for (const [instr, code] of this.opcodeMapping.entries()) {
             if (code === opcode) {
                 return instr;
             }
         }
-        return null;
+        throw new Error(`Opcode "${opcode}" is not a valid I-format opcode.`);
     }
 }
 
@@ -183,13 +183,13 @@ class JFormatInstructionList {
         return this.opcodeMapping.get(instr) || "";
     }
 
-    static getInstruction(opcode: string): string | null {
+    static getInstruction(opcode: string): string {
         for (const [instr, code] of this.opcodeMapping.entries()) {
             if (code === opcode) {
                 return instr;
             }
         }
-        return null;
+        throw new Error(`Opcode "${opcode}" is not a valid J-format opcode.`);
     }
 }
 
