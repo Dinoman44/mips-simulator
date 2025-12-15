@@ -1,42 +1,51 @@
+class TwoWayMapInstructionToCode {
+    private mapItoC: Map<string, string>;
+    private mapCtoI: Map<string, string>;
+
+    constructor(pairs: [string, string][]) {
+        this.mapItoC = new Map<string, string>(pairs);
+        this.mapCtoI = new Map<string, string>(
+            pairs.map(([instr, code]) => [code, instr])
+        );
+    }
+
+    getCode(instr: string): string | undefined {
+        return this.mapItoC.get(instr);
+    }
+
+    isValidInstruction(instr: string): boolean {
+        return this.mapItoC.has(instr);
+    }
+
+    getInstruction(code: string): string | undefined {
+        return this.mapCtoI.get(code);
+    }
+
+    isValidCode(code: string): boolean {
+        return this.mapCtoI.has(code);
+    }
+}
+
 class RFormatInstructionList {
-    private static readonly rFormatInstructionList: string[] = [
-        "add",
-        "addu",
-        "and",
-        "nor",
-        "or",
-        "slt",
-        "sltu",
-        "sll",
-        "srl",
-        "sub",
-        "subu"
+    private static readonly functCodePairs: [string, string][] = [
+        ["add", "100000"],
+        ["addu", "100001"],
+        ["and", "100100"],
+        ["nor", "100111"],
+        ["or", "100101"],
+        ["slt", "101010"],
+        ["sltu", "101011"],
+        ["sll", "000000"],
+        ["srl", "000010"],
+        ["sub", "100010"],
+        ["subu", "100011"],
     ];
-    private static readonly rFormatInstructions: Set<string> = new Set(
-        this.rFormatInstructionList
+    private static readonly functCodeMapping: TwoWayMapInstructionToCode = new TwoWayMapInstructionToCode(
+        this.functCodePairs
     );
 
-    private static readonly rFormatFunctCodes: string[] = [
-        "100000",
-        "100001",
-        "100100",
-        "100111",
-        "100101",
-        "101010",
-        "101011",
-        "000000",
-        "000010",
-        "100010",
-        "100011"
-    ];
-    private static readonly functCodeMapping: Map<string, string> = new Map<string, string>(
-        this.rFormatInstructionList.map(
-                (instr, index) => [instr, this.rFormatFunctCodes[index]]
-            )
-    );
-
-    static isValid(instr: string): boolean {
-        return this.rFormatInstructions.has(instr);
+    static isValid(instr_or_opcode: string): boolean {
+        return this.functCodeMapping.isValidInstruction(instr_or_opcode) || this.functCodeMapping.isValidCode(instr_or_opcode);
     }
 
     static getOpcode(_: string): string {
@@ -44,152 +53,141 @@ class RFormatInstructionList {
     }
 
     static getFunctCode(instr: string): string {
-        return this.functCodeMapping.get(instr) || "";
+        const code: string | undefined = this.functCodeMapping.getCode(instr);
+        if (!code) {
+            throw new Error(`Instruction "${instr}" is not a valid R-format instruction.`);
+        }
+        return code;
     }
 
     static getInstruction(functCode: string): string {
-        for (const [instr, code] of this.functCodeMapping.entries()) {
-            if (code === functCode) {
-                return instr;
-            }
+        const instr: string | undefined = this.functCodeMapping.getInstruction(functCode);
+        if (!instr) {
+            throw new Error(`Funct code "${functCode}" is not a valid R-format funct code.`);
         }
-        throw new Error(`Funct code "${functCode}" is not a valid R-format funct code.`);
+        return instr;
     }
 }
 
 class ShiftInstructionList extends RFormatInstructionList {
-    private static readonly shiftInstructions: Set<string> = new Set([
-        "sll",
-        "srl"
-    ]);
+    private static readonly shiftInstructions: [string, string][] = [
+        ["sll", "000000"],
+        ["srl", "000010"]
+    ];
+    private static readonly shiftInstructionMapping: TwoWayMapInstructionToCode = new TwoWayMapInstructionToCode(
+        this.shiftInstructions
+    );
 
-    static isValid(instr: string): boolean {
-        return this.shiftInstructions.has(instr);
+    static isValid(instr_or_opcode: string): boolean {
+        return this.shiftInstructionMapping.isValidInstruction(instr_or_opcode) || this.shiftInstructionMapping.isValidCode(instr_or_opcode);
     }
 }
 
 class IFormatInstructionList {
-    private static readonly iFormatInstructionList: string[] = [
-        "addi",
-        "addiu",
-        "andi",
-        "beq",
-        "bne",
-        "lbu",
-        "lhu",
-        "ll",
-        "lui",
-        "lw",
-        "ori",
-        "slti",
-        "sltiu",
-        "sb",
-        "sc",
-        "sh",
-        "sw"
+    private static readonly instructionPairs: [string, string][] = [
+        ["addi", "001000"],
+        ["addiu", "001001"],
+        ["andi", "001100"],
+        ["beq", "000100"],
+        ["bne", "000101"],
+        ["lbu", "100100"],
+        ["lhu", "100101"],
+        ["ll", "110000"],
+        ["lui", "001111"],
+        ["lw", "100011"],
+        ["ori", "001101"],
+        ["slti", "001010"],
+        ["sltiu", "001011"],
+        ["sb", "101000"],
+        ["sc", "111000"],
+        ["sh", "101001"],
+        ["sw", "101011"]
     ];
-    private static readonly iFormatInstructions: Set<string> = new Set(
-        this.iFormatInstructionList
+    private static readonly instructionMapping: TwoWayMapInstructionToCode = new TwoWayMapInstructionToCode(
+        this.instructionPairs
     );
 
-    protected static readonly opcodes: string[] = [
-        "001000",
-        "001001",
-        "001100",
-        "000100",
-        "000101",
-        "100100",
-        "100101",
-        "110000",
-        "001111",
-        "100011",
-        "001101",
-        "001010",
-        "001011",
-        "101000",
-        "111000",
-        "101001",
-        "101011"
-    ];
-    protected static readonly opcodeMapping: Map<string, string> = new Map<string, string>(
-        this.iFormatInstructionList.map((instr, index) => [instr, IFormatInstructionList.opcodes[index]])
-    );
-
-    static isValid(instr: string): boolean {
-        return this.iFormatInstructions.has(instr);
+    static isValid(instr_or_opcode: string): boolean {
+        return this.instructionMapping.isValidInstruction(instr_or_opcode) || this.instructionMapping.isValidCode(instr_or_opcode);
     }
 
     static getOpcode(instr: string): string {
-        return this.opcodeMapping.get(instr) || "";
+        const code = this.instructionMapping.getCode(instr);
+        if (!code) {
+            throw new Error(`Instruction "${instr}" is not a valid I-format instruction.`);
+        }
+        return code;
     }
 
     static getInstruction(opcode: string): string {
-        for (const [instr, code] of this.opcodeMapping.entries()) {
-            if (code === opcode) {
-                return instr;
-            }
+        const instr = this.instructionMapping.getInstruction(opcode);
+        if (!instr) {
+            throw new Error(`Opcode "${opcode}" is not a valid I-format opcode.`);
         }
-        throw new Error(`Opcode "${opcode}" is not a valid I-format opcode.`);
+       return instr;
     }
 }
 
 class MemOpInstructionList extends IFormatInstructionList {
-    private static readonly memOpInstructions: Set<string> = new Set([
-        "lw",
-        "sw",
-        "lbu",
-        "lhu",
-        "ll",
-        "sb",
-        "sc",
-        "sh"
-    ]);
+    private static readonly opcodePairs: [string, string][] = [
+        ["lw", "100011"],
+        ["sw", "101011"],
+        ["lbu", "100100"],
+        ["lhu", "100101"],
+        ["ll", "110000"],
+        ["sb", "101000"],
+        ["sc", "111000"],
+        ["sh", "101001"]
+    ];
+    private static readonly memInstructionMapping: TwoWayMapInstructionToCode = new TwoWayMapInstructionToCode(
+        this.opcodePairs
+    );
 
-    static isValid(instr: string): boolean {
-        return this.memOpInstructions.has(instr);
+    static isValid(instr_or_opcode: string): boolean {
+        return this.memInstructionMapping.isValidInstruction(instr_or_opcode) || this.memInstructionMapping.isValidCode(instr_or_opcode);
     }
 }
 
 class BranchInstructionList extends IFormatInstructionList {
-    private static readonly branchInstructions: Set<string> = new Set([
-        "beq",
-        "bne"
-    ]);
+    private static readonly opcodePairs: [string, string][] = [
+        ["beq", "000100"],
+        ["bne", "000101"]
+    ];
+    private static readonly opcodeMapping: TwoWayMapInstructionToCode = new TwoWayMapInstructionToCode(
+        this.opcodePairs
+    );
 
-    static isValid(instr: string): boolean {
-        return this.branchInstructions.has(instr);
+    static isValid(instr_or_opcode: string): boolean {
+        return this.opcodeMapping.isValidInstruction(instr_or_opcode) || this.opcodeMapping.isValidCode(instr_or_opcode);
     }
 }
 
 class JFormatInstructionList {
-    private static readonly jFormatInstructionList: string[] = [
-        "j"
+    private static readonly opcodePairs: [string, string][] = [
+        ["j", "000010"]
     ];
-    private static readonly jFormatInstructions: Set<string> = new Set(
-        this.jFormatInstructionList
-    );
-    private static readonly opcodes: string[] = [
-        "000010"
-    ];
-    private static readonly opcodeMapping: Map<string, string> = new Map<string, string>(
-        this.jFormatInstructionList.map((instr, index) => [instr, JFormatInstructionList.opcodes[index]])
+    private static readonly opcodeMapping: TwoWayMapInstructionToCode = new TwoWayMapInstructionToCode(
+        this.opcodePairs
     );
 
-    static isValid(instr: string): boolean {
-        return this.jFormatInstructions.has(instr);
+    static isValid(instr_or_opcode: string): boolean {
+        return this.opcodeMapping.isValidInstruction(instr_or_opcode) || this.opcodeMapping.isValidCode(instr_or_opcode);
     }
 
     static getOpcode(instr: string): string {
-        return this.opcodeMapping.get(instr) || "";
+        const code: string | undefined = this.opcodeMapping.getCode(instr);
+        if (!code) {
+            throw new Error(`Instruction "${instr}" is not a valid J-format instruction.`);
+        }
+        return code;
     }
 
     static getInstruction(opcode: string): string {
-        for (const [instr, code] of this.opcodeMapping.entries()) {
-            if (code === opcode) {
-                return instr;
-            }
+        const instr: string | undefined = this.opcodeMapping.getInstruction(opcode);
+        if (!instr) {
+            throw new Error(`Opcode "${opcode}" is not a valid J-format opcode.`);
         }
-        throw new Error(`Opcode "${opcode}" is not a valid J-format opcode.`);
+        return instr;
     }
 }
 
