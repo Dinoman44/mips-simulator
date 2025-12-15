@@ -1,0 +1,32 @@
+p.encodes-container {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-weight: 800;
+    color: #111;
+}
+
+span.address {
+    color: #800080;
+}
+
+span.opcode {
+    color: #0000FF;
+    font-weight: bolder;
+}
+
+span.funct {
+    color: #0000FF;
+}
+
+span.register {
+    color: #008000;
+}
+
+span.immediate, span.shamt {
+    color: #FF4500;
+}
