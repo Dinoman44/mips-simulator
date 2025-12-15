@@ -37,8 +37,9 @@ class RformatAfterEncode extends InstructionAfterEncode {
         return (
             <>
                 <EncodedInstruction
-                    classes={["opcode", "register", "register", "register", "shamt", "funct"]}
+                    classes={["opcode", "rd", "rs", "rt", "shamt", "funct"]}
                     parts={this._parts}
+                    binString={this.encodedBinary()}
                     hexString={this.encodedHex()}
                 />
             </>
@@ -51,8 +52,9 @@ class IFormatAfterEncode extends InstructionAfterEncode {
         return (
             <>
                 <EncodedInstruction
-                    classes={["opcode", "register", "register", "immediate"]}
+                    classes={["opcode", "rs", "rt", "immediate"]}
                     parts={this._parts}
+                    binString={this.encodedBinary()}
                     hexString={this.encodedHex()}
                 />
             </>
@@ -67,6 +69,7 @@ class JFormatAfterEncode extends InstructionAfterEncode {
                 <EncodedInstruction
                     classes={["opcode", "address"]}
                     parts={this._parts}
+                    binString={this.encodedBinary()}
                     hexString={this.encodedHex()}
                 />
             </>

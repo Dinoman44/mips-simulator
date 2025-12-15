@@ -23,8 +23,16 @@ span.funct {
     color: #0000FF;
 }
 
-span.register {
+span.rs {
     color: #008000;
+}
+
+span.rt {
+    color: #0b89bf;
+}
+
+span.rs {
+    color: #008057;
 }
 
 span.immediate, span.shamt {
