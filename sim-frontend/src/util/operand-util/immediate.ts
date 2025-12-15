@@ -4,6 +4,10 @@ class Immediate {
     private readonly _width: number;
     private readonly _hexString: string;
 
+    static validateImmediate(value: string): void {
+        if (isNaN(Number(value))) throw new Error(`Immediate value "${value}" is not a valid number.`);
+    }
+
     constructor(value: number, binaryStringWidth?: number, binaryString?: string) {
         this._value = value;
         if (binaryStringWidth !== undefined) {
@@ -36,35 +40,41 @@ class Immediate {
 }
 
 class ShiftAmountImmediate extends Immediate {
-    constructor(value: number) {
-        if (value < 0 || value > 31) {
+    constructor(value: string) {
+        Immediate.validateImmediate(value);
+        const numValue = Number(value);
+        if (numValue < 0 || numValue > 31) {
             throw new Error(`Shift amount must be between 0 and 31. Given: ${value}`);
         }
-        super(value, 5);
+        super(numValue, 5);
     }
 }
 
 class ITypeImmediate extends Immediate {
-    constructor(value: number) {
-        if (value < (-1 << 15) || value > (1 << 16) - 1) {
+    constructor(value: string) {
+        Immediate.validateImmediate(value);
+        const numValue = Number(value);
+        if (numValue < (-1 << 15) || numValue > (1 << 16) - 1) {
             throw new Error(`I-Type immediate must be between -32768 and 65535. Given: ${value}`);
         }
         let binaryString: string;
-        if (value >= 0) {
-            binaryString = value.toString(2).padStart(16, "0");
+        if (numValue >= 0) {
+            binaryString = numValue.toString(2).padStart(16, "0");
         } else {
-            binaryString = (value >>> 0).toString(2).padStart(16, "1").slice(-16);
+            binaryString = (numValue >>> 0).toString(2).padStart(16, "1").slice(-16);
         }
-        super(value, undefined, binaryString);
+        super(numValue, undefined, binaryString);
     }
 }
 
 class JumpAddressImmediate extends Immediate {
-    constructor(value: number) {
-        if (value < 0 || value > (1 << 26) - 1) {
+    constructor(value: string) {
+        Immediate.validateImmediate(value);
+        const numValue = Number(value);
+        if (numValue < 0 || numValue > (1 << 26) - 1) {
             throw new Error(`Jump address immediate must be between 0 and 67108863. Given: ${value}`);
         }
-        super(value, 26);
+        super(numValue, 26);
     }
 }
 

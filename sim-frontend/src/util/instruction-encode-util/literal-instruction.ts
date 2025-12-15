@@ -21,7 +21,7 @@ abstract class LiteralInstruction {
         } else if (JFormatInstructionList.isValid(instr)) {
             return new JformatLiteralInstruction(line);
         } else {
-            throw new Error(`Instruction ${instr} is not a valid MIPS instruction.`);
+            throw new Error(`Instruction "${instr}" is not a valid MIPS instruction.`);
         }
     }
 
@@ -45,7 +45,7 @@ class RformatLiteralInstruction extends LiteralInstruction {
 
             let rt: Register = Register.parseRegister(this.operands[1]);
             let rd: Register = Register.parseRegister(this.operands[0]);
-            let shamt: Immediate = new ShiftAmountImmediate(parseInt(this.operands[2]));
+            let shamt: Immediate = new ShiftAmountImmediate(this.operands[2]);
 
             return new RformatAfterEncode(this, [opcode, rs, rt.binaryString(), rd.binaryString(), shamt.binaryString(), funct]);
         } else {
@@ -70,7 +70,7 @@ class IformatLiteralInstruction extends LiteralInstruction {
             let opcode: string = IFormatInstructionList.getOpcode(this.instr);
             let rt: Register = Register.parseRegister(this.operands[0]);
             let rs: Register = Register.parseRegister(this.operands[2]);
-            let immediate: Immediate = new ITypeImmediate(parseInt(this.operands[1]));
+            let immediate: Immediate = new ITypeImmediate(this.operands[1]);
 
             return new IFormatAfterEncode(this, [opcode, rs.binaryString(), rt.binaryString(), immediate.binaryString()]);
         } else if (BranchInstructionList.isValid(this.instr)) {
@@ -78,7 +78,7 @@ class IformatLiteralInstruction extends LiteralInstruction {
             let opcode: string = IFormatInstructionList.getOpcode(this.instr);
             let rs: Register = Register.parseRegister(this.operands[0]);
             let rt: Register = Register.parseRegister(this.operands[1]);
-            let immediate: Immediate = new ITypeImmediate(parseInt(this.operands[2]));
+            let immediate: Immediate = new ITypeImmediate(this.operands[2]);
             
             return new IFormatAfterEncode(this, [opcode, rs.binaryString(), rt.binaryString(), immediate.binaryString()]);
         } else {
@@ -86,7 +86,7 @@ class IformatLiteralInstruction extends LiteralInstruction {
             let opcode: string = IFormatInstructionList.getOpcode(this.instr);
             let rt: Register = Register.parseRegister(this.operands[0]);
             let rs: Register = Register.parseRegister(this.operands[1]);
-            let immediate: Immediate = new ITypeImmediate(parseInt(this.operands[2]));
+            let immediate: Immediate = new ITypeImmediate(this.operands[2]);
 
             return new IFormatAfterEncode(this, [opcode, rs.binaryString(), rt.binaryString(), immediate.binaryString()]);
         }
@@ -97,7 +97,7 @@ class JformatLiteralInstruction extends LiteralInstruction {
     encode(): InstructionAfterEncode {
         // jump instruction: j address
         let opcode: string = JFormatInstructionList.getOpcode(this.instr);
-        let address: Immediate = new JumpAddressImmediate(parseInt(this.operands[0]));
+        let address: Immediate = new JumpAddressImmediate(this.operands[0]);
 
         return new JFormatAfterEncode(this, [opcode, address.binaryString()]);
     }
