@@ -1,4 +1,4 @@
-import { LiteralInstruction } from "./literal-instruction";
+import { LiteralInstruction } from "./literal-instruction.ts";
 import React from "react";
 import "../../styles/encodes.css";
 import "../../components/encoded-instr.tsx";
