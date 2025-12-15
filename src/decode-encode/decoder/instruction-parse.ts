@@ -1,4 +1,4 @@
-import { IFormatInstructionList, JFormatInstructionList, RFormatInstructionList } from "../instructionlist-util/instruction-list";
+import { IFormatInstructionList, JFormatInstructionList, RFormatInstructionList } from "../mips-instructions/instruction-list";
 
 class ParsedEncodedInstruction {
     private readonly _binaryEncodedInstruction: string;

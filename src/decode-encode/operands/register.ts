@@ -1,4 +1,4 @@
-import { TwoWayMap } from "../dsa-util/map.ts";
+import { TwoWayMap } from "../../util/dsa/map.ts";
 
 class TwoWayMapRegisterToNumber extends TwoWayMap<string, number> {
     getNumber(reg: string): number | undefined {
@@ -49,24 +49,29 @@ class Register {
         ["$t8", 24],
         ["$t9", 25],
     ]);
-    static readonly reservedRegisters: Set<number> = new Set([1, 26, 27, 28, 29, 30, 31]);
+    static readonly reservedRegisters: Set<number> = new Set<number>([1, 26, 27, 28, 29, 30, 31]);
 
-    static parseRegister(reg: string): Register {
-        let stripped: string = reg.trim().replace(/^\$/, "");
-        if (this.register_mapping.isValidRegister(`$${stripped}`)) {
-            return new Register(`$${stripped}`, this.register_mapping.getNumber(`$${stripped}`)!);
+    static parseRegisterForNumber(reg: string): Register {
+        if (/^\$(zero|[vats]\d+)$/gi.test(reg)) {
+            if (this.register_mapping.isValidRegister(reg)) {
+                return new Register(reg, this.register_mapping.getNumber(reg)!);
+            }
+            throw new Error(`"${reg}" is not a valid register.`);
+        } else if (/^\$\d+$/gi.test(reg)) {
+            let regNum: number = parseInt(reg.slice(1), 10);
+
+            if (this.register_mapping.isValidNumber(regNum)) {
+                return new Register(this.register_mapping.getRegister(regNum)!, regNum);
+            } else if (regNum < 0 || regNum > 31) {
+                throw new Error(`Register number out of range (0-31): ${reg}`);
+            } else if (regNum in this.reservedRegisters) {
+                throw new Error(`Register number ${regNum} is reserved and cannot be used.`);
+            } else {
+                throw new Error(`${regNum} is not a valid register.`);
+            }
+        } else {
+            throw new Error(`Invalid register format: ${reg}`);
         }
-        let regNum: number = parseInt(stripped, 10);
-        if (isNaN(regNum)) {
-            throw new Error(`Invalid register: ${reg}`);
-        }
-        if (regNum < 0 || regNum > 31) {
-            throw new Error(`Register number out of range (0-31): ${reg}`);
-        }
-        if (regNum in this.reservedRegisters) {
-            throw new Error(`Register number ${regNum} is reserved and cannot be used.`);
-        }
-        return new Register(`$${regNum}`, regNum);
     }
 
     private constructor(label: string, number: number) {

@@ -1,7 +1,7 @@
-import { RFormatInstructionList, IFormatInstructionList, JFormatInstructionList, ShiftInstructionList, MemOpInstructionList, BranchInstructionList, } from "../instructionlist-util/instruction-list.ts";
+import { RFormatInstructionList, IFormatInstructionList, JFormatInstructionList, ShiftInstructionList, MemOpInstructionList, BranchInstructionList, } from "../mips-instructions/instruction-list.ts";
 import { ParsedInstruction } from "./instruction-parse.ts";
-import { Register } from "../operand-util/register.ts";
-import { Immediate, ShiftAmountImmediate, ITypeImmediate, JumpAddressImmediate } from "../operand-util/immediate.ts";
+import { Register } from "../operands/register.ts";
+import { Immediate, ShiftAmountImmediate, ITypeImmediate, JumpAddressImmediate } from "../operands/immediate.ts";
 import { InstructionAfterEncode, RformatAfterEncode, IFormatAfterEncode, JFormatAfterEncode } from "./after-encode.tsx";
 
 abstract class LiteralInstruction {
@@ -43,16 +43,16 @@ class RformatLiteralInstruction extends LiteralInstruction {
             let rs: string = "00000";
             let funct: string = RFormatInstructionList.getFunctCode(this.instr);
 
-            let rt: Register = Register.parseRegister(this.operands[1]);
-            let rd: Register = Register.parseRegister(this.operands[0]);
+            let rt: Register = Register.parseRegisterForNumber(this.operands[1]);
+            let rd: Register = Register.parseRegisterForNumber(this.operands[0]);
             let shamt: Immediate = new ShiftAmountImmediate(this.operands[2]);
 
             return new RformatAfterEncode(this, [opcode, rs, rt.binaryString(), rd.binaryString(), shamt.binaryString(), funct]);
         } else {
             // other R-format instruction: instr rd, rs, rt
-            let rs: Register = Register.parseRegister(this.operands[1]);
-            let rt: Register = Register.parseRegister(this.operands[2]);
-            let rd: Register = Register.parseRegister(this.operands[0]);
+            let rs: Register = Register.parseRegisterForNumber(this.operands[1]);
+            let rt: Register = Register.parseRegisterForNumber(this.operands[2]);
+            let rd: Register = Register.parseRegisterForNumber(this.operands[0]);
             let opcode: string = "000000";
             let funct: string = RFormatInstructionList.getFunctCode(this.instr);
             let shamt: string = "00000";
@@ -68,24 +68,24 @@ class IformatLiteralInstruction extends LiteralInstruction {
         if (MemOpInstructionList.isValid(this.instr)) {
             // memory operation: lw/sw rt, immediate(rs)
             let opcode: string = IFormatInstructionList.getOpcode(this.instr);
-            let rt: Register = Register.parseRegister(this.operands[0]);
-            let rs: Register = Register.parseRegister(this.operands[2]);
+            let rt: Register = Register.parseRegisterForNumber(this.operands[0]);
+            let rs: Register = Register.parseRegisterForNumber(this.operands[2]);
             let immediate: Immediate = new ITypeImmediate(this.operands[1]);
 
             return new IFormatAfterEncode(this, [opcode, rs.binaryString(), rt.binaryString(), immediate.binaryString()]);
         } else if (BranchInstructionList.isValid(this.instr)) {
             // branch instruction: beq/bne rs, rt, immediate
             let opcode: string = IFormatInstructionList.getOpcode(this.instr);
-            let rs: Register = Register.parseRegister(this.operands[0]);
-            let rt: Register = Register.parseRegister(this.operands[1]);
+            let rs: Register = Register.parseRegisterForNumber(this.operands[0]);
+            let rt: Register = Register.parseRegisterForNumber(this.operands[1]);
             let immediate: Immediate = new ITypeImmediate(this.operands[2]);
             
             return new IFormatAfterEncode(this, [opcode, rs.binaryString(), rt.binaryString(), immediate.binaryString()]);
         } else {
             // other I-format instruction: instr rt, rs, immediate
             let opcode: string = IFormatInstructionList.getOpcode(this.instr);
-            let rt: Register = Register.parseRegister(this.operands[0]);
-            let rs: Register = Register.parseRegister(this.operands[1]);
+            let rt: Register = Register.parseRegisterForNumber(this.operands[0]);
+            let rs: Register = Register.parseRegisterForNumber(this.operands[1]);
             let immediate: Immediate = new ITypeImmediate(this.operands[2]);
 
             return new IFormatAfterEncode(this, [opcode, rs.binaryString(), rt.binaryString(), immediate.binaryString()]);

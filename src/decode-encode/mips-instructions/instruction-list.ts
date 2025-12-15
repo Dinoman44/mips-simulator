@@ -1,4 +1,4 @@
-import { TwoWayMap } from "../dsa/map.ts";
+import { TwoWayMap } from "../../util/dsa/map.ts";
 
 class TwoWayMapInstructionToCode extends TwoWayMap<string, string> {
     getCode(instr: string): string | undefined {

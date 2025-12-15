@@ -1,5 +1,5 @@
-import { ParsedEncodedInstruction } from "./instruction-parse";
-import { IFormatInstructionList, JFormatInstructionList, RFormatInstructionList, ShiftInstructionList } from "../instructionlist-util/instruction-list.ts";
+import { ParsedEncodedInstruction } from "./instruction-parse.ts";
+import { IFormatInstructionList, JFormatInstructionList, RFormatInstructionList, ShiftInstructionList } from "../mips-instructions/instruction-list.ts";
 
 abstract class EncodedInstruction {
     protected readonly parsedInstruction: ParsedEncodedInstruction;

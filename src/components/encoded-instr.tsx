@@ -1,3 +1,5 @@
+import "../styles/encodes.css";
+
 function EncodedInstruction(props: { classes: string[]; parts: string[]; binString: string; hexString: string; }): React.JSX.Element {
     return (
         <>

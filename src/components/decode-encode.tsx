@@ -1,5 +1,5 @@
-import { LiteralInstruction } from '../util/instruction-encode-util/literal-instruction';
-import { InstructionAfterEncode } from '../util/instruction-encode-util/after-encode';
+import { LiteralInstruction } from '../decode-encode/encoder/literal-instruction.ts';
+import { InstructionAfterEncode } from '../decode-encode/encoder/after-encode.tsx';
 import { useState } from 'react';
 import "../styles/card.css";
 import "../styles/form.css";
