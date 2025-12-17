@@ -1,3 +1,7 @@
 .card {
     margin: 1rem;
 }
+
+.help-card {
+    min-height: 420px;
+}

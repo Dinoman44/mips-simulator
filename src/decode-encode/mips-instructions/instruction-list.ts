@@ -16,6 +16,14 @@ class TwoWayMapInstructionToCode extends TwoWayMap<string, string> {
     isValidCode(code: string): boolean {
         return this.isValidB(code);
     }
+
+    getAllInstructions(): string[] {
+        return this.getAllA();
+    }
+
+    getAllCodes(): string[] {
+        return this.getAllB();
+    }
 }
 
 class RFormatInstructionList {
@@ -58,6 +66,10 @@ class RFormatInstructionList {
             throw new Error(`Funct code "${functCode}" is not a valid R-format funct code.`);
         }
         return instr;
+    }
+
+    static getAllInstructions(): string[] {
+        return this.functCodeMapping.getAllInstructions();
     }
 }
 
@@ -117,6 +129,10 @@ class IFormatInstructionList {
             throw new Error(`Opcode "${opcode}" is not a valid I-format opcode.`);
         }
        return instr;
+    }
+
+    static getAllInstructions(): string[] {
+        return this.instructionMapping.getAllInstructions();
     }
 }
 
@@ -180,6 +196,10 @@ class JFormatInstructionList {
             throw new Error(`Opcode "${opcode}" is not a valid J-format opcode.`);
         }
         return instr;
+    }
+
+    static getAllInstructions(): string[] {
+        return this.opcodeMapping.getAllInstructions();
     }
 }
 

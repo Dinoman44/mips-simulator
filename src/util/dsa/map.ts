@@ -4,9 +4,7 @@ class TwoWayMap<A, B> {
 
     constructor(pairs: [A, B][]) {
         this.mapAtoB = new Map<A, B>(pairs);
-        this.mapBtoA = new Map<B, A>(
-            pairs.map(([a, b]) => [b, a])
-        );
+        this.mapBtoA = new Map<B, A>(pairs.map(([a, b]) => [b, a]));
     }
 
     getB(a: A): B | undefined {
@@ -23,6 +21,14 @@ class TwoWayMap<A, B> {
 
     isValidB(b: B): boolean {
         return this.mapBtoA.has(b);
+    }
+
+    getAllA(): A[] {
+        return Array.from(this.mapAtoB.keys());
+    }
+    
+    getAllB(): B[] {
+        return Array.from(this.mapBtoA.keys());
     }
 }
 
