@@ -6,9 +6,14 @@ import { Decoder, Encoder, HelpTab } from './components/decode-encode.tsx'
 import Header from './components/header.tsx';
 import Row from 'react-bootstrap/esm/Row';
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById('header')!).render(
   <StrictMode>
     <Header />
+  </StrictMode>,
+)
+
+createRoot(document.getElementById('main')!).render(
+  <StrictMode>
     <Row xs={1} md={2} className="g-4">
       <Encoder />
       <Decoder />

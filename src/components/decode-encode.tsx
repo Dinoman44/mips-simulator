@@ -110,7 +110,7 @@ function HelpTab() {
   return (
     <>
     <Row className="mb-4">
-      <h2>Help & Instructions</h2>
+      <h2 style={{paddingLeft: "40px"}}>Help & Instructions</h2>
       <Col>
         <Card className="help-card">
           <Card.Header as="h3">Registers</Card.Header>

@@ -22,9 +22,12 @@ a:hover {
 }
 
 body {
-  margin: 0;
   color: rgba(255, 255, 255, 0.87);
   background-color: #191d24;
+}
+
+.root {
+  width: 90%;
 }
 
 h1 {
