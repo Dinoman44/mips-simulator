@@ -1,7 +1,7 @@
 import { RFormatInstructionList, IFormatInstructionList, JFormatInstructionList, ShiftInstructionList, MemOpInstructionList, BranchInstructionList, } from "../mips-instructions/instruction-list.ts";
 import { ParsedInstruction } from "./instruction-parse.ts";
 import { Register } from "../operands/register.ts";
-import { Immediate, ShiftAmountImmediate, ITypeImmediate, JumpAddressImmediate } from "../operands/immediate.ts";
+import { Immediate } from "../operands/immediate.ts";
 import { InstructionAfterEncode, RformatAfterEncode, IFormatAfterEncode, JFormatAfterEncode } from "./after-encode.tsx";
 
 abstract class LiteralInstruction {
@@ -45,7 +45,7 @@ class RformatLiteralInstruction extends LiteralInstruction {
 
             let rt: Register = Register.parseRegisterForNumber(this.operands[1]);
             let rd: Register = Register.parseRegisterForNumber(this.operands[0]);
-            let shamt: Immediate = new ShiftAmountImmediate(this.operands[2]);
+            let shamt: Immediate = Immediate.makeUnsignedImmediate(this.operands[2], 5);
 
             return new RformatAfterEncode(this, [opcode, rs, rt.binaryString(), rd.binaryString(), shamt.binaryString(), funct]);
         } else {
@@ -70,7 +70,7 @@ class IformatLiteralInstruction extends LiteralInstruction {
             let opcode: string = IFormatInstructionList.getOpcode(this.instr);
             let rt: Register = Register.parseRegisterForNumber(this.operands[0]);
             let rs: Register = Register.parseRegisterForNumber(this.operands[2]);
-            let immediate: Immediate = new ITypeImmediate(this.operands[1]);
+            let immediate: Immediate = Immediate.makeSignedImmediate(this.operands[1]);
 
             return new IFormatAfterEncode(this, [opcode, rs.binaryString(), rt.binaryString(), immediate.binaryString()]);
         } else if (BranchInstructionList.isValid(this.instr)) {
@@ -78,7 +78,7 @@ class IformatLiteralInstruction extends LiteralInstruction {
             let opcode: string = IFormatInstructionList.getOpcode(this.instr);
             let rs: Register = Register.parseRegisterForNumber(this.operands[0]);
             let rt: Register = Register.parseRegisterForNumber(this.operands[1]);
-            let immediate: Immediate = new ITypeImmediate(this.operands[2]);
+            let immediate: Immediate = Immediate.makeSignedImmediate(this.operands[2]);
             
             return new IFormatAfterEncode(this, [opcode, rs.binaryString(), rt.binaryString(), immediate.binaryString()]);
         } else {
@@ -86,7 +86,7 @@ class IformatLiteralInstruction extends LiteralInstruction {
             let opcode: string = IFormatInstructionList.getOpcode(this.instr);
             let rt: Register = Register.parseRegisterForNumber(this.operands[0]);
             let rs: Register = Register.parseRegisterForNumber(this.operands[1]);
-            let immediate: Immediate = new ITypeImmediate(this.operands[2]);
+            let immediate: Immediate = Immediate.makeSignedImmediate(this.operands[2]);
 
             return new IFormatAfterEncode(this, [opcode, rs.binaryString(), rt.binaryString(), immediate.binaryString()]);
         }
@@ -97,7 +97,7 @@ class JformatLiteralInstruction extends LiteralInstruction {
     encode(): InstructionAfterEncode {
         // jump instruction: j address
         let opcode: string = JFormatInstructionList.getOpcode(this.instr);
-        let address: Immediate = new JumpAddressImmediate(this.operands[0]);
+        let address: Immediate = Immediate.makeUnsignedImmediate(this.operands[0], 26);
 
         return new JFormatAfterEncode(this, [opcode, address.binaryString()]);
     }
