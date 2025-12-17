@@ -6,7 +6,7 @@ import "../styles/card.css";
 import "../styles/form.css";
 import { Button, Card, Col, Form, Row, Tab, Tabs } from 'react-bootstrap';
 import { InstructionAfterDecode } from '../decode-encode/decoder/after-decode.tsx';
-import { IFormatInstructionList, JFormatInstructionList,RFormatInstructionList } from '../decode-encode/mips-instructions/instruction-list.ts';
+import { IFormatInstructionList, JFormatInstructionList,RFormatInstructionList } from '../util/mips-instructions/instruction-list.ts';
 
 function Decoder() {
   const [input, setInput] = useState("");

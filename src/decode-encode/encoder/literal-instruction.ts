@@ -1,4 +1,4 @@
-import { RFormatInstructionList, IFormatInstructionList, JFormatInstructionList, ShiftInstructionList, MemOpInstructionList, BranchInstructionList, } from "../mips-instructions/instruction-list.ts";
+import { RFormatInstructionList, IFormatInstructionList, JFormatInstructionList, ShiftInstructionList, MemOpInstructionList, BranchInstructionList, } from "../../util/mips-instructions/instruction-list.ts";
 import { ParsedInstruction } from "./instruction-parse.ts";
 import { Register } from "../operands/register.ts";
 import { Immediate } from "../operands/immediate.ts";
