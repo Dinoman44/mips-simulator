@@ -1,4 +1,4 @@
-import { RFormatInstructionList, IFormatInstructionList, JFormatInstructionList, ShiftInstructionList, MemOpInstructionList, BranchInstructionList, } from "../../util/mips-instructions/instruction-list.ts";
+import { RFormatInstructionList, IFormatInstructionList, JFormatInstructionList, ShiftInstructionList, MemOpInstructionList, BranchInstructionList, UnsignedIFormatInstructionList } from "../../util/mips-instructions/instruction-list.ts";
 import { ParsedInstruction } from "./instruction-parse.ts";
 import { Register } from "../operands/register.ts";
 import { Immediate } from "../operands/immediate.ts";
@@ -88,6 +88,12 @@ class IformatLiteralInstruction extends LiteralInstruction {
             rs = Register.parseRegisterForNumber(this.operands[0]);
             rt = Register.parseRegisterForNumber(this.operands[1]);
             immediate = Immediate.makeSignedImmediate(this.operands[2]);
+        } else if (UnsignedIFormatInstructionList.isValid(this.instr)) {
+            // unsigned I-format instruction: instr rt, rs, immediate
+            opcode = IFormatInstructionList.getOpcode(this.instr);
+            rt = Register.parseRegisterForNumber(this.operands[0]);
+            rs = Register.parseRegisterForNumber(this.operands[1]);
+            immediate = Immediate.makeUnsignedImmediate(this.operands[2], 16);
         } else {
             // other I-format instruction: instr rt, rs, immediate
             opcode = IFormatInstructionList.getOpcode(this.instr);

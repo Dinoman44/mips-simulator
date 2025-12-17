@@ -136,6 +136,22 @@ class IFormatInstructionList {
     }
 }
 
+class UnsignedIFormatInstructionList extends IFormatInstructionList {
+    private static readonly unsignedInstructionPairs: [string, string][] = [
+        ["addiu", "001001"],
+        ["lbu", "100100"],
+        ["lhu", "100101"],
+        ["sltiu", "001011"],
+    ];
+    private static readonly unsignedInstructionMapping: TwoWayMapInstructionToCode = new TwoWayMapInstructionToCode(
+        this.unsignedInstructionPairs
+    );
+
+    static isValid(instr_or_opcode: string): boolean {
+        return this.unsignedInstructionMapping.isValidInstruction(instr_or_opcode) || this.unsignedInstructionMapping.isValidCode(instr_or_opcode);
+    }
+}
+
 class MemOpInstructionList extends IFormatInstructionList {
     private static readonly opcodePairs: [string, string][] = [
         ["lw", "100011"],
@@ -209,5 +225,6 @@ export {
     JFormatInstructionList,
     ShiftInstructionList,
     MemOpInstructionList,
-    BranchInstructionList
+    BranchInstructionList,
+    UnsignedIFormatInstructionList
 }
