@@ -4,7 +4,6 @@ function DecodedInstructionDisplay(props: { classes: string[]; parts: string[]; 
     return (
         <>
             <label htmlFor="decoded-instruction">Decoded Instruction:</label>
-            <br/>
             <p id="decoded-instruction" className="encodes-container">
                 {props.instruction}
             </p>

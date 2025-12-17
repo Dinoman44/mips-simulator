@@ -110,7 +110,7 @@ class JFormatEncodedInstruction extends EncodedInstruction {
         return new InstructionAfterDecode(
             `${instr} ${addressVal.value()}`,
             ["instr", "address"],
-            [instr, `${addressVal.value()}`]
+            [instr, `0x${addressVal.hexString()}`]
         );
     }
 }
