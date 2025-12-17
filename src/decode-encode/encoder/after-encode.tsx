@@ -1,7 +1,7 @@
 import { LiteralInstruction } from "./literal-instruction.ts";
 import React from "react";
 import "../../components/encoded-instr.tsx";
-import { EncodedInstruction } from "../../components/encoded-instr.tsx";
+import { EncodedInstructionDisplay } from "../../components/encoded-instr.tsx";
 
 class InstructionAfterEncode {
     protected _instruction: LiteralInstruction;
@@ -35,7 +35,7 @@ class RformatAfterEncode extends InstructionAfterEncode {
     partsJsx(): React.JSX.Element {
         return (
             <>
-                <EncodedInstruction
+                <EncodedInstructionDisplay
                     classes={["opcode", "rs", "rt", "rd", "shamt", "funct"]}
                     parts={this._parts}
                     binString={this.encodedBinary()}
@@ -50,7 +50,7 @@ class IFormatAfterEncode extends InstructionAfterEncode {
     partsJsx(): React.JSX.Element {
         return (
             <>
-                <EncodedInstruction
+                <EncodedInstructionDisplay
                     classes={["opcode", "rs", "rt", "immediate"]}
                     parts={this._parts}
                     binString={this.encodedBinary()}
@@ -65,7 +65,7 @@ class JFormatAfterEncode extends InstructionAfterEncode {
     partsJsx(): React.JSX.Element {
         return (
             <>
-                <EncodedInstruction
+                <EncodedInstructionDisplay
                     classes={["opcode", "address"]}
                     parts={this._parts}
                     binString={this.encodedBinary()}

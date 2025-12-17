@@ -1,5 +1,6 @@
 import { LiteralInstruction } from '../decode-encode/encoder/literal-instruction.ts';
 import { InstructionAfterEncode } from '../decode-encode/encoder/after-encode.tsx';
+import { EncodedInstruction } from '../decode-encode/decoder/encoded-instruction.ts';
 import { useState } from 'react';
 import "../styles/card.css";
 import "../styles/form.css";
@@ -7,14 +8,15 @@ import { Button, Card, Col, Form } from 'react-bootstrap';
 
 function Decoder() {
   const [input, setInput] = useState("");
-  const [decoding, setDecoding] = useState<React.JSX.Element | null>(null);
+  const [decoding, setDecoding] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     try {
-      setDecoding(<p>Decoding not implemented yet.</p>);
+      const res = EncodedInstruction.makeInstruction(input);
+      setDecoding(res.decode());
     } catch (err: any) {
       setDecoding(null);
       setError(err.message || "Failed to decode instruction.");

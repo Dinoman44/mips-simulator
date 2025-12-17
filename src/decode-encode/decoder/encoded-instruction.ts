@@ -1,5 +1,7 @@
 import { ParsedEncodedInstruction } from "./instruction-parse.ts";
-import { IFormatInstructionList, JFormatInstructionList, RFormatInstructionList, ShiftInstructionList } from "../mips-instructions/instruction-list.ts";
+import { BranchInstructionList, IFormatInstructionList, JFormatInstructionList, MemOpInstructionList, RFormatInstructionList, ShiftInstructionList } from "../mips-instructions/instruction-list.ts";
+import { Register } from "../operands/register.ts";
+import { Immediate, ShiftAmountImmediate, ITypeImmediate, JumpAddressImmediate } from "../operands/immediate.ts";
 
 abstract class EncodedInstruction {
     protected readonly parsedInstruction: ParsedEncodedInstruction;
@@ -33,18 +35,59 @@ abstract class EncodedInstruction {
 
 class RFormatEncodedInstruction extends EncodedInstruction {
     decode(): string {
-        const [opcode, rs, rt, rd, shamt, funct] = this.parsedInstruction.parts();
+        const [_, rs, rt, rd, shamt, funct] = this.parsedInstruction.parts();
+
+        const instr: string = RFormatInstructionList.getInstruction(funct);
+        const rdReg: Register = Register.parseRegisterForLabel(parseInt(rd, 2));
+        const rtReg: Register = Register.parseRegisterForLabel(parseInt(rt, 2));
+        const binShamt = `0b${shamt}`;
+        const shamtVal: Immediate = new ShiftAmountImmediate(binShamt);
+
         if (ShiftInstructionList.isValid(funct)) {
             // shift instruction: sll/srl rd, rt, shamt
-            const instr = ShiftInstructionList.getInstruction(funct);
-            const rdReg = null;
+            return `${instr} ${rdReg.label()}, ${rtReg.label()}, ${shamtVal.value()}`;
         }
-        return "";
+
+        // other r-format: instr rd, rs, rt
+        const rsReg: Register = Register.parseRegisterForLabel(parseInt(rs, 2));
+        return `${instr} ${rdReg.label()}, ${rsReg.label()}, ${rtReg.label()}`;
     }
 }
 
-class IFormatEncodedInstruction extends EncodedInstruction {}
+class IFormatEncodedInstruction extends EncodedInstruction {
+    decode(): string {
+        const [opcode, rs, rt, immediate] = this.parsedInstruction.parts();
 
-class JFormatEncodedInstruction extends EncodedInstruction {}
+        const instr: string = IFormatInstructionList.getInstruction(opcode);
+        const rsReg: Register = Register.parseRegisterForLabel(parseInt(rs, 2));
+        const rtReg: Register = Register.parseRegisterForLabel(parseInt(rt, 2));
+        const binImmediate = `0b${immediate}`;
+        const immediateVal: Immediate = new ITypeImmediate(binImmediate);
+
+        if (MemOpInstructionList.isValid(this.parsedInstruction.getOpcode())) {
+            // memory operation: memop rt, immediate(rs)
+            return `${instr} ${rtReg.label()}, ${immediateVal.value()}(${rsReg.label()})`;
+        } else if (BranchInstructionList.isValid(this.parsedInstruction.getOpcode())) {
+            // branch instruction: branch rs, rt, immediate
+            return `${instr} ${rsReg.label()}, ${rtReg.label()}, ${immediateVal.value()}`;
+        } else {
+            // other i-format: instr rt, rs, immediate
+            return `${instr} ${rtReg.label()}, ${rsReg.label()}, ${immediateVal.value()}`;
+        }
+    }
+}
+
+class JFormatEncodedInstruction extends EncodedInstruction {
+    decode(): string {
+        const [opcode, address] = this.parsedInstruction.parts();
+
+        const instr: string = JFormatInstructionList.getInstruction(opcode);
+        const binAddress = `0b${address}`;
+        const addressVal: Immediate = new JumpAddressImmediate(binAddress);
+
+        // j-format: instr address
+        return `${instr} ${addressVal.value()}`;
+    }
+}
 
 export { EncodedInstruction };

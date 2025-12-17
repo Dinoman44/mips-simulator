@@ -1,29 +1,34 @@
 import { IFormatInstructionList, JFormatInstructionList, RFormatInstructionList } from "../mips-instructions/instruction-list";
+import { isBinary, isHexadecimal } from "../operands/numbers";
 
 class ParsedEncodedInstruction {
     private readonly _binaryEncodedInstruction: string;
     private _parts: string[];
 
     private static convertToBinary(encodedInstruction: string): string {
-        if (/^[01]+$/.test(encodedInstruction)) {
+        if (isBinary(encodedInstruction)) {
             console.warn("Treating as binary encoded instruction.");
+            encodedInstruction = encodedInstruction.replace(/^0b/gi, "");
             if (encodedInstruction.length > 32) {
                 throw new Error("Binary encoded instruction exceeds 32 bits.");
             }
             return encodedInstruction.padStart(32, "0");
-        } else if (/^[0-9a-fA-F]+$/.test(encodedInstruction)) {
+        } else if (isHexadecimal(encodedInstruction)) {
             console.warn("Treating as hexadecimal encoded instruction.");
+            encodedInstruction = encodedInstruction.replace(/^0x/gi, "");
             if (encodedInstruction.length > 8) {
                 throw new Error("Hexadecimal encoded instruction exceeds 8 hex digits.");
             }
-            const num = Number.parseInt(encodedInstruction, 16);
+            const num = Number(`0x${encodedInstruction}`);
             return num.toString(2).padStart(32, "0");
+        } else {
+            console.warn("idk what this is, watch out");
+            const num: string = Number(encodedInstruction).toString(2);
+            if (num.length > 32) {
+                throw new Error("Encoded instruction exceeds 32 bits.");
+            }
+            return num.padStart(32, "0");
         }
-        const num: string = Number(encodedInstruction).toString(2);
-        if (num.length > 32) {
-            throw new Error("Encoded instruction exceeds 32 bits.");
-        }
-        return num.padStart(32, "0");
     }
 
     private parseBinaryInstruction(): string[] {

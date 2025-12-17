@@ -74,6 +74,18 @@ class Register {
         }
     }
 
+    static parseRegisterForLabel(regNum: number): Register {
+        if (this.register_mapping.isValidNumber(regNum)) {
+            return new Register(this.register_mapping.getRegister(regNum)!, regNum);
+        } else if (regNum < 0 || regNum > 31) {
+            throw new Error(`Register number out of range (0-31): ${regNum}`);
+        } else if (regNum in this.reservedRegisters) {
+            throw new Error(`Register number ${regNum} is reserved and cannot be used.`);
+        } else {
+            throw new Error(`${regNum} is not a valid register.`);
+        }
+    }
+
     private constructor(label: string, number: number) {
         this._label = label;
         this._number = number;

@@ -1,33 +1,103 @@
+import { TwoWayMap } from "../../util/dsa/map";
+
 function isHexadecimal(value: string): boolean {
     return /^(0x)?[0-9a-f]+$/gi.test(value);
 }
+
 
 function isBinary(value: string): boolean {
     return /^(0b)?[01]+$/gi.test(value);
 }
 
-function binToNumber(value: string): number {
-    value = value.replace(/^0b/gi, "");
-    return parseInt(value, 2);
+
+const hexToBinMapping : TwoWayMap<string, string> = new TwoWayMap([
+    ["0", "0000"],
+    ["1", "0001"],
+    ["2", "0010"],
+    ["3", "0011"],
+    ["4", "0100"],
+    ["5", "0101"],
+    ["6", "0110"],
+    ["7", "0111"],
+    ["8", "1000"],
+    ["9", "1001"],
+    ["A", "1010"],
+    ["B", "1011"],
+    ["C", "1100"],
+    ["D", "1101"],
+    ["E", "1110"],
+    ["F", "1111"],
+]);
+
+
+function binTo32bitUnsigned(value: string): string {
+    const cleaned = value.replace(/^0b/gi, "");
+    return cleaned.padStart(32, "0");
 }
 
-function hexToNumber(value: string): number {
-    value = value.replace(/^0x/gi, "");
-    return parseInt(value, 16);
+
+function hexToBinary32BitUnsigned(value: string): string {
+    const cleaned = value.replace(/^0x/gi, "").toUpperCase();
+    let binaryString = "";
+    for (const char of cleaned) binaryString += hexToBinMapping.getB(char);
+    return binTo32bitUnsigned(binaryString);
 }
 
-function anyToNumber(value: string): number {
+
+function binTo32bitSigned(value: string): string {
+    const cleaned = value.replace(/^0b/gi, "");
+    return cleaned[0] === "1" ? cleaned.padStart(32, "1") : cleaned.padStart(32, "0");
+}
+
+
+function hexTo32bitSigned(value: string): string {
+    const cleaned = value.replace(/^0x/gi, "").toUpperCase();
+    let binaryString = "";
+    for (const char of cleaned) binaryString += hexToBinMapping.getB(char);
+    return binTo32bitSigned(binaryString);
+}
+
+
+function anyTo32bitUnsigned(value: string): string {
     const num = Number(value);
     if (isNaN(num)) {
-        throw new Error(`Immediate value "${value}" is not a valid number.`);
+        throw new Error(`Value "${value}" is not a valid number.`);
     }
-    return num;
+    if (num < 0) {
+        throw new Error(`Value "${value}" is negative; cannot be treated as unsigned.`);
+    }
+    return binTo32bitUnsigned(num.toString(2));
 }
+
+
+function anyTo32bitSigned(value: string): string {
+    let num = Number(value);
+    if (isNaN(num)) {
+        throw new Error(`Value "${value}" is not a valid number.`);
+    }
+    num >>= 0;
+    if (num < 0) {
+        return binTo32bitSigned(num.toString(2).replace(/^-/, ""));
+    }
+    return binTo32bitUnsigned(num.toString(2).replace(/^-/, ""));
+}
+
+function bin32BitToHex(value: string): string {
+    const cleaned = value.replace(/^0b/gi, "");
+    let hexString = "";
+    for (let i = 0; i < 32; i += 4) hexString += hexToBinMapping.getA(cleaned.slice(i, i + 4));
+    return hexString;
+}
+
 
 export {
     isBinary,
     isHexadecimal,
-    binToNumber,
-    hexToNumber,
-    anyToNumber
+    binTo32bitUnsigned,
+    hexToBinary32BitUnsigned,
+    anyTo32bitUnsigned,
+    bin32BitToHex,
+    hexTo32bitSigned,
+    binTo32bitSigned,
+    anyTo32bitSigned
 }

@@ -1,25 +1,59 @@
+import { isBinary, isHexadecimal, hexToBinary32BitUnsigned, binTo32bitUnsigned, anyTo32bitUnsigned, bin32BitToHex, binTo32bitSigned, hexTo32bitSigned, anyTo32bitSigned } from "./numbers.ts";
+
 class Immediate {
     private readonly _value: number;
-    private readonly _binaryString: string;
+    private readonly _32bitBinaryString: string;
     private readonly _width: number;
-    private readonly _hexString: string;
+    private readonly _32bitHexString: string;
 
-    static validateImmediate(value: string): void {
-        if (isNaN(Number(value))) throw new Error(`Immediate value "${value}" is not a valid number.`);
+    private static parseImmediateUnsigned(value: string): string {
+        if (isBinary(value)) {
+            return binTo32bitUnsigned(value)
+        } else if (isHexadecimal(value)) {
+            return hexToBinary32BitUnsigned(value)
+        } else {
+            return anyTo32bitUnsigned(value)
+        }
     }
 
-    constructor(value: number, binaryStringWidth?: number, binaryString?: string) {
-        this._value = value;
-        if (binaryStringWidth !== undefined) {
-            this._binaryString = value.toString(2).padStart(binaryStringWidth, "0");
-            this._width = binaryStringWidth;
-        } else if (binaryString !== undefined) {
-            this._binaryString = binaryString;
-            this._width = binaryString.length;
+    private static parseImmediateSigned(value: string): string {
+        if (isBinary(value)) {
+            return binTo32bitSigned(value)
+        } else if (isHexadecimal(value)) {
+            return hexTo32bitSigned(value)
         } else {
-            throw new Error("Either binaryStringWidth or binaryString must be provided.");
+            return anyTo32bitSigned(value);
         }
-        this._hexString = parseInt(this._binaryString, 2).toString(16).toUpperCase().padStart(Math.ceil(this._width / 4), "0");
+    }
+
+    static makeUnsignedImmediate(value: string, width: number): Immediate {
+        const binaryString = Immediate.parseImmediateUnsigned(value);
+        const unsignedValue = parseInt(binaryString, 2);
+        const hexString = bin32BitToHex(binaryString);
+        return new Immediate(unsignedValue, binaryString, hexString, width);
+    }
+
+    static makeSignedImmediate(value: string, width: number = 16): Immediate {
+        const binaryString = Immediate.parseImmediateSigned(value);
+        const signedValue = parseInt(binaryString, 2) >> 0;
+        const hexString = bin32BitToHex(binaryString);
+        return new Immediate(signedValue, binaryString, hexString, width);
+    }
+
+    private constructor(value: number, binaryString: string, hexString: string, width: number) {
+        if (width < 1 || width > 32) {
+            throw new Error(`Immediate width "${width}" is out of bounds (1-32).`);
+        }
+        if (binaryString.length !== 32) {
+            throw new Error(`Binary string length "${binaryString.length}" is not 32 bits.`);
+        }
+        if (hexString.length !== 8) {
+            throw new Error(`Hex string length "${hexString.length}" is not 8 hex digits.`);
+        }
+        this._value = value;
+        this._32bitBinaryString = binaryString;
+        this._32bitHexString = hexString;
+        this._width = width;
     }
 
     value(): number {
@@ -27,60 +61,23 @@ class Immediate {
     }
 
     binaryString(): string {
-        return this._binaryString;
+        return this._32bitBinaryString.slice(32 - this._width);
     }
 
     hexString(): string {
-        return this._hexString;
+        return this._32bitHexString.slice(8 - Math.ceil(this._width / 4));
     }
 
-    width(): number {
-        return this._width;
+    fullBinaryString(): string {
+        return this._32bitBinaryString;
+    }
+
+    fullHexString(): string {
+        return this._32bitHexString;
     }
 }
 
-class ShiftAmountImmediate extends Immediate {
-    constructor(value: string) {
-        Immediate.validateImmediate(value);
-        const numValue = Number(value);
-        if (numValue < 0 || numValue > 31) {
-            throw new Error(`Shift amount must be between 0 and 31. Given: ${value}`);
-        }
-        super(numValue, 5);
-    }
-}
-
-class ITypeImmediate extends Immediate {
-    constructor(value: string) {
-        Immediate.validateImmediate(value);
-        const numValue = Number(value);
-        if (numValue < (-1 << 15) || numValue > (1 << 16) - 1) {
-            throw new Error(`I-Type immediate must be between -32768 and 65535. Given: ${value}`);
-        }
-        let binaryString: string;
-        if (numValue >= 0) {
-            binaryString = numValue.toString(2).padStart(16, "0");
-        } else {
-            binaryString = (numValue >>> 0).toString(2).padStart(16, "1").slice(-16);
-        }
-        super(numValue, undefined, binaryString);
-    }
-}
-
-class JumpAddressImmediate extends Immediate {
-    constructor(value: string) {
-        Immediate.validateImmediate(value);
-        const numValue = Number(value);
-        if (numValue < 0 || numValue > (1 << 26) - 1) {
-            throw new Error(`Jump address immediate must be between 0 and 67108863. Given: ${value}`);
-        }
-        super(numValue, 26);
-    }
-}
 
 export {
-    Immediate,
-    ShiftAmountImmediate,
-    ITypeImmediate,
-    JumpAddressImmediate
+    Immediate
 }
