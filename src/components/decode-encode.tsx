@@ -16,7 +16,7 @@ function Decoder() {
     e.preventDefault();
     setError(null);
     try {
-      const result: InstructionAfterDecode = new InstructionAfterDecode(EncodedInstruction.makeInstruction(input));
+      const result: InstructionAfterDecode = EncodedInstruction.makeInstruction(input).decode();
       setDecoding(result.partsJsx());
     } catch (err: any) {
       setDecoding(null);

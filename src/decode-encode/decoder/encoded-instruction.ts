@@ -2,6 +2,7 @@ import { ParsedEncodedInstruction } from "./instruction-parse.ts";
 import { BranchInstructionList, IFormatInstructionList, JFormatInstructionList, MemOpInstructionList, RFormatInstructionList, ShiftInstructionList } from "../mips-instructions/instruction-list.ts";
 import { Register } from "../operands/register.ts";
 import { Immediate } from "../operands/immediate.ts";
+import { InstructionAfterDecode } from "./after-decode.tsx";
 
 abstract class EncodedInstruction {
     protected readonly parsedInstruction: ParsedEncodedInstruction;
@@ -30,11 +31,11 @@ abstract class EncodedInstruction {
         this.parts = this.parsedInstruction.parts();
     }
 
-    abstract decode(): string;
+    abstract decode(): InstructionAfterDecode;
 }
 
 class RFormatEncodedInstruction extends EncodedInstruction {
-    decode(): string {
+    decode(): InstructionAfterDecode {
         const [_, rs, rt, rd, shamt, funct] = this.parsedInstruction.parts();
 
         const instr: string = RFormatInstructionList.getInstruction(funct);
@@ -45,17 +46,25 @@ class RFormatEncodedInstruction extends EncodedInstruction {
 
         if (ShiftInstructionList.isValid(funct)) {
             // shift instruction: sll/srl rd, rt, shamt
-            return `${instr} ${rdReg.label()}, ${rtReg.label()}, ${shamtVal.value()}`;
+            return new InstructionAfterDecode(
+                `${instr} ${rdReg.label()}, ${rtReg.label()}, ${shamtVal.value()}`,
+                ["instr", "rd", "", "rt", "", "shamt"],
+                [instr, rdReg.label(), ",", rtReg.label(), ",", `${shamtVal.value()}`]
+            );
         }
 
         // other r-format: instr rd, rs, rt
         const rsReg: Register = Register.parseRegisterForLabel(parseInt(rs, 2));
-        return `${instr} ${rdReg.label()}, ${rsReg.label()}, ${rtReg.label()}`;
+        return new InstructionAfterDecode(
+            `${instr} ${rdReg.label()}, ${rsReg.label()}, ${rtReg.label()}`,
+            ["instr", "rd", "", "rs", "", "rt"],
+            [instr, rdReg.label(), ",", rsReg.label(), ",", rtReg.label()]
+        );
     }
 }
 
 class IFormatEncodedInstruction extends EncodedInstruction {
-    decode(): string {
+    decode(): InstructionAfterDecode {
         const [opcode, rs, rt, immediate] = this.parsedInstruction.parts();
 
         const instr: string = IFormatInstructionList.getInstruction(opcode);
@@ -66,19 +75,31 @@ class IFormatEncodedInstruction extends EncodedInstruction {
 
         if (MemOpInstructionList.isValid(this.parsedInstruction.getOpcode())) {
             // memory operation: memop rt, immediate(rs)
-            return `${instr} ${rtReg.label()}, ${immediateVal.value()}(${rsReg.label()})`;
+            return new InstructionAfterDecode(
+                `${instr} ${rtReg.label()}, ${immediateVal.value()}(${rsReg.label()})`,
+                ["instr", "rt", "", "immediate", "", "rs", ""],
+                [instr, rtReg.label(), ",", `${immediateVal.value()}`, "(", rsReg.label(), ")"]
+            )
         } else if (BranchInstructionList.isValid(this.parsedInstruction.getOpcode())) {
             // branch instruction: branch rs, rt, immediate
-            return `${instr} ${rsReg.label()}, ${rtReg.label()}, ${immediateVal.value()}`;
+            return new InstructionAfterDecode(
+                `${instr} ${rsReg.label()}, ${rtReg.label()}, ${immediateVal.value()}`,
+                ["instr", "rs", "", "rt", "", "immediate"],
+                [instr, rsReg.label(), ",", rtReg.label(), ",", `${immediateVal.value()}`]
+            );
         } else {
             // other i-format: instr rt, rs, immediate
-            return `${instr} ${rtReg.label()}, ${rsReg.label()}, ${immediateVal.value()}`;
+            return new InstructionAfterDecode(
+                `${instr} ${rtReg.label()}, ${rsReg.label()}, ${immediateVal.value()}`,
+                ["instr", "rt", "", "rs", "", "immediate"],
+                [instr, rtReg.label(), ",", rsReg.label(), ",", `${immediateVal.value()}`]
+            );
         }
     }
 }
 
 class JFormatEncodedInstruction extends EncodedInstruction {
-    decode(): string {
+    decode(): InstructionAfterDecode {
         const [opcode, address] = this.parsedInstruction.parts();
 
         const instr: string = JFormatInstructionList.getInstruction(opcode);
@@ -86,7 +107,11 @@ class JFormatEncodedInstruction extends EncodedInstruction {
         const addressVal: Immediate = Immediate.makeUnsignedImmediate(binAddress, 26);
 
         // j-format: instr address
-        return `${instr} ${addressVal.value()}`;
+        return new InstructionAfterDecode(
+            `${instr} ${addressVal.value()}`,
+            ["instr", "address"],
+            [instr, `${addressVal.value()}`]
+        );
     }
 }
 

@@ -19,11 +19,11 @@ span.opcode {
     font-weight: bolder;
 }
 
-span.funct {
+span.funct, span.instr {
     color: #0000FF;
 }
 
-span.rs {
+span.rd {
     color: #008000;
 }
 
@@ -32,7 +32,7 @@ span.rt {
 }
 
 span.rs {
-    color: #008057;
+    color: #0f4f69;
 }
 
 span.immediate, span.shamt {

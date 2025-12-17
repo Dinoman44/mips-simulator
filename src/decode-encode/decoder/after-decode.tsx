@@ -1,22 +1,25 @@
-import { EncodedInstruction } from "./encoded-instruction.ts";
+import { DecodedInstructionDisplay } from "../../components/decoded-instr.tsx";
 import "../../styles/encodes.css"
 
 class InstructionAfterDecode {
-    protected _instruction: EncodedInstruction;
-    protected _instructionStr: string;
+    private _instruction: string;
+    private _fields: string[];
+    private _parts: string[];
     
-    constructor(instruction: EncodedInstruction) {
+    constructor(instruction: string, fields: string[], parts: string[]) {
         this._instruction = instruction;
-        this._instructionStr = this._instruction.decode();
+        this._fields = fields;
+        this._parts = parts;
     }
 
     partsJsx(): React.JSX.Element {
         return (
             <>
-                <label htmlFor="decoded-instruction">Decoded Instruction</label>
-                <p id="decoded-instruction" className="encodes-container">
-                    {this._instructionStr}
-                </p>
+                <DecodedInstructionDisplay
+                    classes={this._fields}
+                    parts={this._parts}
+                    instruction={this._instruction}
+                />
             </>
         )
     }
