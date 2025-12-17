@@ -1,5 +1,5 @@
 import { ParsedEncodedInstruction } from "./instruction-parse.ts";
-import { BranchInstructionList, IFormatInstructionList, JFormatInstructionList, MemOpInstructionList, RFormatInstructionList, ShiftInstructionList } from "../../util/mips-instructions/instruction-list.ts";
+import { BranchInstructionList, IFormatInstructionList, JFormatInstructionList, MemOpInstructionList, RFormatInstructionList, ShiftInstructionList, UnsignedIFormatInstructionList } from "../../util/mips-instructions/instruction-list.ts";
 import { Register } from "../operands/register.ts";
 import { Immediate } from "../operands/immediate.ts";
 import { InstructionAfterDecode } from "./after-decode.tsx";
@@ -86,6 +86,14 @@ class IFormatEncodedInstruction extends EncodedInstruction {
                 `${instr} ${rsReg.label()}, ${rtReg.label()}, ${immediateVal.value()}`,
                 ["instr", "rs", "", "rt", "", "immediate"],
                 [instr, rsReg.label(), ",", rtReg.label(), ",", `${immediateVal.value()}`]
+            );
+        } else if (UnsignedIFormatInstructionList.isValid(this.parsedInstruction.getOpcode())) {
+            // unsigned I-format: instr rt, rs, immediate
+            const unsignedImm: Immediate = Immediate.makeUnsignedImmediate(binImmediate, 16);
+            return new InstructionAfterDecode(
+                `${instr} ${rtReg.label()}, ${rsReg.label()}, ${unsignedImm.value()}`,
+                ["instr", "rt", "", "rs", "", "immediate"],
+                [instr, rtReg.label(), ",", rsReg.label(), ",", `${unsignedImm.value()}`]
             );
         } else {
             // other i-format: instr rt, rs, immediate
