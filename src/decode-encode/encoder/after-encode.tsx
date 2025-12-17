@@ -1,6 +1,4 @@
 import { LiteralInstruction } from "./literal-instruction.ts";
-import React from "react";
-import "../../components/encoded-instr.tsx";
 import { EncodedInstructionDisplay } from "../../components/encoded-instr.tsx";
 
 class InstructionAfterEncode {
