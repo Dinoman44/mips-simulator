@@ -1,15 +1,19 @@
 import { TwoWayMap } from "../../util/dsa/map";
 
+/**********************************************************/
+/**************** Check for number formats ****************/
+/**********************************************************/
 function isHexadecimal(value: string): boolean {
-    return /^(0x)?[0-9a-f]+$/gi.test(value);
+    return /^0x[0-9a-f]+$/gi.test(value);
 }
-
 
 function isBinary(value: string): boolean {
-    return /^(0b)?[01]+$/gi.test(value);
+    return /^0b[01]+$/gi.test(value);
 }
 
-
+/*************************/
+/**** Helpful mapping ****/
+/*************************/
 const hexToBinMapping : TwoWayMap<string, string> = new TwoWayMap([
     ["0", "0000"],
     ["1", "0001"],
@@ -29,12 +33,13 @@ const hexToBinMapping : TwoWayMap<string, string> = new TwoWayMap([
     ["F", "1111"],
 ]);
 
-
+/*******************************************************************/
+/**************** Convert to unsigned 32-bit binary ****************/
+/*******************************************************************/
 function binTo32bitUnsigned(value: string): string {
     const cleaned = value.replace(/^0b/gi, "");
     return cleaned.padStart(32, "0");
 }
-
 
 function hexToBinary32BitUnsigned(value: string): string {
     const cleaned = value.replace(/^0x/gi, "").toUpperCase();
@@ -42,21 +47,6 @@ function hexToBinary32BitUnsigned(value: string): string {
     for (const char of cleaned) binaryString += hexToBinMapping.getB(char);
     return binTo32bitUnsigned(binaryString);
 }
-
-
-function binTo32bitSigned(value: string): string {
-    const cleaned = value.replace(/^0b/gi, "");
-    return cleaned[0] === "1" ? cleaned.padStart(32, "1") : cleaned.padStart(32, "0");
-}
-
-
-function hexTo32bitSigned(value: string): string {
-    const cleaned = value.replace(/^0x/gi, "").toUpperCase();
-    let binaryString = "";
-    for (const char of cleaned) binaryString += hexToBinMapping.getB(char);
-    return binTo32bitSigned(binaryString);
-}
-
 
 function anyTo32bitUnsigned(value: string): string {
     const num = Number(value);
@@ -69,6 +59,20 @@ function anyTo32bitUnsigned(value: string): string {
     return binTo32bitUnsigned(num.toString(2));
 }
 
+/*****************************************************************/
+/**************** Convert to signed 32-bit binary ****************/
+/*****************************************************************/
+function binTo32bitSigned(value: string): string {
+    const cleaned = value.replace(/^0b/gi, "");
+    return cleaned[0] === "1" ? cleaned.padStart(32, "1") : cleaned.padStart(32, "0");
+}
+
+function hexTo32bitSigned(value: string): string {
+    const cleaned = value.replace(/^0x/gi, "").toUpperCase();
+    let binaryString = "";
+    for (const char of cleaned) binaryString += hexToBinMapping.getB(char);
+    return binTo32bitSigned(binaryString);
+}
 
 function anyTo32bitSigned(value: string): string {
     let num = Number(value);
@@ -82,6 +86,9 @@ function anyTo32bitSigned(value: string): string {
     return binTo32bitUnsigned(num.toString(2).replace(/^-/, ""));
 }
 
+/**********************************************************************/
+/**************** Convert 32-bit binary to hexadecimal ****************/
+/**********************************************************************/
 function bin32BitToHex(value: string): string {
     const cleaned = value.replace(/^0b/gi, "");
     let hexString = "";

@@ -1,7 +1,7 @@
 import { ParsedEncodedInstruction } from "./instruction-parse.ts";
 import { BranchInstructionList, IFormatInstructionList, JFormatInstructionList, MemOpInstructionList, RFormatInstructionList, ShiftInstructionList } from "../mips-instructions/instruction-list.ts";
 import { Register } from "../operands/register.ts";
-import { Immediate, ShiftAmountImmediate, ITypeImmediate, JumpAddressImmediate } from "../operands/immediate.ts";
+import { Immediate } from "../operands/immediate.ts";
 
 abstract class EncodedInstruction {
     protected readonly parsedInstruction: ParsedEncodedInstruction;
@@ -41,7 +41,7 @@ class RFormatEncodedInstruction extends EncodedInstruction {
         const rdReg: Register = Register.parseRegisterForLabel(parseInt(rd, 2));
         const rtReg: Register = Register.parseRegisterForLabel(parseInt(rt, 2));
         const binShamt = `0b${shamt}`;
-        const shamtVal: Immediate = new ShiftAmountImmediate(binShamt);
+        const shamtVal: Immediate = Immediate.makeUnsignedImmediate(binShamt, 5);
 
         if (ShiftInstructionList.isValid(funct)) {
             // shift instruction: sll/srl rd, rt, shamt
@@ -62,7 +62,7 @@ class IFormatEncodedInstruction extends EncodedInstruction {
         const rsReg: Register = Register.parseRegisterForLabel(parseInt(rs, 2));
         const rtReg: Register = Register.parseRegisterForLabel(parseInt(rt, 2));
         const binImmediate = `0b${immediate}`;
-        const immediateVal: Immediate = new ITypeImmediate(binImmediate);
+        const immediateVal: Immediate = Immediate.makeSignedImmediate(binImmediate);
 
         if (MemOpInstructionList.isValid(this.parsedInstruction.getOpcode())) {
             // memory operation: memop rt, immediate(rs)
@@ -83,7 +83,7 @@ class JFormatEncodedInstruction extends EncodedInstruction {
 
         const instr: string = JFormatInstructionList.getInstruction(opcode);
         const binAddress = `0b${address}`;
-        const addressVal: Immediate = new JumpAddressImmediate(binAddress);
+        const addressVal: Immediate = Immediate.makeUnsignedImmediate(binAddress, 26);
 
         // j-format: instr address
         return `${instr} ${addressVal.value()}`;
