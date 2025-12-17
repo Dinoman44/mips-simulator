@@ -80,10 +80,36 @@ function anyTo32bitSigned(value: string): string {
         throw new Error(`Value "${value}" is not a valid number.`);
     }
     num >>= 0;
-    if (num < 0) {
-        return binTo32bitSigned(num.toString(2).replace(/^-/, ""));
+    return twosComplement(num);
+}
+
+function twosComplement(num: number): string {
+    if (num >= 0) {
+        return binTo32bitUnsigned(num.toString(2));
+    } else {
+        const absNum = Math.abs(num);
+        const binaryString = absNum.toString(2).padStart(32, "0");
+        let inverted = "";
+        for (const bit of binaryString) {
+            inverted += bit === "0" ? "1" : "0";
+        }
+        let carry = 1;
+        let result = "";
+        for (let i = 31; i >= 0; i--) {
+            const sum = parseInt(inverted[i]) + carry;
+            if (sum === 2) {
+                result = "0" + result;
+                carry = 1;
+            } else if (sum === 3) {
+                result = "1" + result;
+                carry = 1;
+            } else {
+                result = sum.toString() + result;
+                carry = 0;
+            }
+        }
+        return result;
     }
-    return binTo32bitUnsigned(num.toString(2).replace(/^-/, ""));
 }
 
 /**********************************************************************/
