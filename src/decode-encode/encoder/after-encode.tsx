@@ -1,77 +1,31 @@
-import { LiteralInstruction } from "./literal-instruction.ts";
 import { EncodedInstructionDisplay } from "../../components/encoded-instr.tsx";
+import { bin32BitToHex } from "../operands/numbers.ts";
 
 class InstructionAfterEncode {
-    protected _instruction: LiteralInstruction;
-    protected _parts: string[];
-    protected _encodedBinary: string;
-    protected _encodedHex: string;
+    private _parts: string[];
+    private _classes: string[];
+    private _encodedBinary: string;
+    private _encodedHex: string;
 
-    constructor(instruction: LiteralInstruction, parts: string[]) {
-        this._instruction = instruction;
+    constructor(classes: string[], parts: string[]) {
+        this._classes = classes;
         this._parts = parts;
         this._encodedBinary = parts.join("");
-        this._encodedHex = parseInt(this._encodedBinary, 2).toString(16).padStart(8, "0");
+        this._encodedHex = bin32BitToHex(this._encodedBinary);
     }
 
-    encodedBinary(): string {
-        return this._encodedBinary;
-    }
-
-    encodedHex(): string {
-        return this._encodedHex;
-    }
-
-    partsJsx(): React.JSX.Element {
-        return (
-            <></>
-        )
-    }
-}
-
-class RformatAfterEncode extends InstructionAfterEncode {
     partsJsx(): React.JSX.Element {
         return (
             <>
                 <EncodedInstructionDisplay
-                    classes={["opcode", "rs", "rt", "rd", "shamt", "funct"]}
+                    classes={this._classes}
                     parts={this._parts}
-                    binString={this.encodedBinary()}
-                    hexString={this.encodedHex()}
+                    binString={this._encodedBinary}
+                    hexString={this._encodedHex}
                 />
             </>
         )
     }
 }
 
-class IFormatAfterEncode extends InstructionAfterEncode {
-    partsJsx(): React.JSX.Element {
-        return (
-            <>
-                <EncodedInstructionDisplay
-                    classes={["opcode", "rs", "rt", "immediate"]}
-                    parts={this._parts}
-                    binString={this.encodedBinary()}
-                    hexString={this.encodedHex()}
-                />
-            </>
-        )
-    }
-}
-
-class JFormatAfterEncode extends InstructionAfterEncode {
-    partsJsx(): React.JSX.Element {
-        return (
-            <>
-                <EncodedInstructionDisplay
-                    classes={["opcode", "address"]}
-                    parts={this._parts}
-                    binString={this.encodedBinary()}
-                    hexString={this.encodedHex()}
-                />
-            </>
-        )
-    }
-}
-
-export { InstructionAfterEncode, RformatAfterEncode, IFormatAfterEncode, JFormatAfterEncode };
+export { InstructionAfterEncode };
