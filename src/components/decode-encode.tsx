@@ -119,7 +119,11 @@ function HelpTab() {
                 There are 32 registers in MIPS architecture, each identified by a name and a number.
                 You can use either register names (e.g., <code>$t0</code>, <code>$s1</code>)
                 or register numbers (e.g., <code>$8</code>).
+              </p>
+              <p>
                 Make sure that <code>$</code> is included to denote a register.
+              </p>
+              <p>
                 The registers <code>$1</code>(<code>$at</code>), <code>$26</code>(<code>$k0</code>),
                 <code>$27</code>(<code>$k1</code>), <code>$28</code>(<code>$gp</code>),
                 <code>$29</code>(<code>$sp</code>), <code>$30</code>(<code>$fp</code>), and
@@ -135,11 +139,21 @@ function HelpTab() {
             <Card.Body>
               <p>
                 Currently only integers are supported. Word size in MIPS is 32 bits (4 bytes).
+              </p>
+              <p>
                 I-type instructions can take a 16-bit signed immediate value.
                 Any value entered as less than 16 bits
                 is still treated as a 16-bit signed integer,
-                so <code>0b101</code> is treated as the signed integer -3.
+                so <code>0b101</code> is treated as the signed integer <code>-3</code>.
+              </p>
+              <p>
+                Some I-type instructions (like <code>andiu</code>, <code>sltiu</code>) take
+                a 16-bit unsigned immediate value instead.
+              </p>
+              <p>
                 J-type instructions can take a 26-bit address, treated as an unsigned integer.
+              </p>
+              <p>
                 R-type logical shift instructions (<code>sll</code>, <code>srl</code>)
                 take a 5-bit unsigned shift amount.
               </p>
@@ -148,14 +162,18 @@ function HelpTab() {
         </Col>
         <Col>
           <Card className="help-card">
-            <Card.Header as="h3">Instruction formats</Card.Header>
+            <Card.Header as="h3">Labels</Card.Header>
             <Card.Body>
               <p>
                 Control flow instructions like <code>beq</code>, <code>bne</code>, and <code>j</code> normally
                 take labels as arguments, but for the purpose of this encoder, they will take
                 an immediate value instead.
+              </p>
+              <p>
                 For branch instructions (<code>beq</code>, <code>bne</code>), the immediate value
                 represents the offset from the next instruction (in number of instructions).
+              </p>
+              <p>
                 For jump instructions (<code>j</code>), the immediate value represents the target
                 address divided by 4 (since MIPS addresses are word-aligned).
               </p>
@@ -167,7 +185,10 @@ function HelpTab() {
             <Card.Header as="h3">Supported Instructions</Card.Header>
             <Card.Body>
               <p>
-                <i>Most</i> integer MIPS instructions are supported. Pseudoinstructions (like <code>move</code>)
+                <i>Most</i> integer MIPS instructions are supported.
+              </p>
+              <p>
+                Pseudoinstructions (like <code>move</code>)
                 and floating-point operations (like <code>add.s</code>, <code>mul.d</code>)
                 are <strong>not</strong> supported. The full list is below:
               </p>
