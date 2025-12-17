@@ -4,7 +4,7 @@ import { EncodedInstruction } from '../decode-encode/decoder/encoded-instruction
 import { useState } from 'react';
 import "../styles/card.css";
 import "../styles/form.css";
-import { Button, Card, Col, Form, ListGroup, Row, Tab, Tabs } from 'react-bootstrap';
+import { Button, Card, Col, Form, Row, Tab, Tabs } from 'react-bootstrap';
 import { InstructionAfterDecode } from '../decode-encode/decoder/after-decode.tsx';
 import { IFormatInstructionList, JFormatInstructionList,RFormatInstructionList } from '../decode-encode/mips-instructions/instruction-list.ts';
 
@@ -101,6 +101,12 @@ function Encoder() {
 }
 
 function HelpTab() {
+  const rFormatInstructions = RFormatInstructionList.getAllInstructions();
+  const numRFormatInstructions = rFormatInstructions.length;
+  const iFormatInstructions = IFormatInstructionList.getAllInstructions();
+  const numIFormatInstructions = iFormatInstructions.length;
+  const jFormatInstructions = JFormatInstructionList.getAllInstructions();
+  const numJFormatInstructions = jFormatInstructions.length;
   return (
     <>
     <Row className="mb-4">
@@ -168,19 +174,13 @@ function HelpTab() {
               transition={false}
             >
               <Tab eventKey="r-type" title="R-type">
-                <ListGroup>
-                  {RFormatInstructionList.getAllInstructions().map(i => <ListGroup.Item key={i}><code>{i}</code></ListGroup.Item>)}
-                </ListGroup>
+                {rFormatInstructions.map((i, idx) => <><code>{i}</code>{idx < numRFormatInstructions - 1 && ", "}</>)}
               </Tab>
               <Tab eventKey="i-type" title="I-type">
-                <ListGroup>
-                  {IFormatInstructionList.getAllInstructions().map(i => <ListGroup.Item key={i}><code>{i}</code></ListGroup.Item>)}
-                </ListGroup>
+                {iFormatInstructions.map((i, idx) => <><code>{i}</code>{idx < numIFormatInstructions - 1 && ", "}</>)}
               </Tab>
               <Tab eventKey="j-type" title="J-type">
-                <ListGroup>
-                  {JFormatInstructionList.getAllInstructions().map(i => <ListGroup.Item key={i}><code>{i}</code></ListGroup.Item>)}
-                </ListGroup>
+                {jFormatInstructions.map((i, idx) => <><code>{i}</code>{idx < numJFormatInstructions - 1 && ", "}</>)}
               </Tab>
             </Tabs>
           </Card.Body>
