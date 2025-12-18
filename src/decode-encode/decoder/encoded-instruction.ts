@@ -87,6 +87,13 @@ class IFormatEncodedInstruction extends EncodedInstruction {
                 ["instr", "rs", "", "rt", "", "immediate"],
                 [instr, rsReg.label(), ",", rtReg.label(), ",", `${immediateVal.value()}`]
             );
+        } else if (opcode === "001111") {
+            // lui rt, immediate
+            return new InstructionAfterDecode(
+                `${instr} ${rtReg.label()}, ${immediateVal.value()}`,
+                ["instr", "rt", "", "immediate"],
+                [instr, rtReg.label(), ",", `${immediateVal.value()}`]
+            );
         } else if (UnsignedIFormatInstructionList.isValid(this.parsedInstruction.getOpcode())) {
             // unsigned I-format: instr rt, rs, immediate
             const unsignedImm: Immediate = Immediate.makeUnsignedImmediate(binImmediate, 16);
