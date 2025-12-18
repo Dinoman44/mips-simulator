@@ -158,12 +158,16 @@ const IFormatInstructionDetails: InstructionDetails = new InstructionDetails(
 const JFormatInstructionDetails: InstructionDetails = new InstructionDetails(
     JFormatInstructionList.getAllInstructions(), [
         "j address",
+        "jal address"
     ], [
         "j 0x00400000",
+        "jal 0x00404000"
     ], [
         "Jumps to the target PC address specified by the 26-bit address field.\nThe target address is computed by combining the upper 4 bits of the current PC + 4 with the 26-bit address shifted left by 2 bits to form a full 32-bit address.",
+        "Jumps to the target PC address specified by the 26-bit address field and stores the return address (PC + 4) in register `$ra` ($31).\nThe target address is computed by combining the upper 4 bits of the current PC + 4 with the 26-bit address shifted left by 2 bits to form a full 32-bit address.\nUsed for returning after a function call."
     ], [
         "PC = (PC + 4)[31:28] | (address << 2)",
+        "ra = PC + 4; PC = (PC + 4)[31:28] | (address << 2)"
     ]
 );
 

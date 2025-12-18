@@ -188,7 +188,8 @@ class BranchInstructionList extends IFormatInstructionList {
 
 class JFormatInstructionList {
     private static readonly opcodePairs: [string, string][] = [
-        ["j", "000010"]
+        ["j", "000010"],
+        ["jal", "000011"]
     ];
     private static readonly opcodeMapping: TwoWayMapInstructionToCode = new TwoWayMapInstructionToCode(
         this.opcodePairs
