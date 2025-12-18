@@ -1,4 +1,4 @@
-import { TwoWayMap } from "../../util/dsa/map";
+import { TwoWayMap } from "../dsa/map";
 
 /**********************************************************/
 /**************** Check for number formats ****************/

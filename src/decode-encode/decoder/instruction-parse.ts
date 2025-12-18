@@ -1,5 +1,5 @@
 import { IFormatInstructionList, JFormatInstructionList, RFormatInstructionList } from "../../util/mips-instructions/instruction-list.ts";
-import { isBinary, isHexadecimal } from "../operands/numbers";
+import { isBinary, isHexadecimal } from "../../util/operands/numbers.ts";
 
 class ParsedEncodedInstruction {
     private readonly _binaryEncodedInstruction: string;

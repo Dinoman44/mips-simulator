@@ -1,4 +1,4 @@
-import { TwoWayMap } from "../../util/dsa/map.ts";
+import { TwoWayMap } from "../dsa/map.ts";
 
 class TwoWayMapRegisterToNumber extends TwoWayMap<string, number> {
     getNumber(reg: string): number | undefined {

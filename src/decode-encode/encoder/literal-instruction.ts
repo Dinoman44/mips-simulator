@@ -1,7 +1,7 @@
 import { RFormatInstructionList, IFormatInstructionList, JFormatInstructionList, ShiftInstructionList, MemOpInstructionList, BranchInstructionList, UnsignedIFormatInstructionList } from "../../util/mips-instructions/instruction-list.ts";
 import { ParsedInstruction } from "./instruction-parse.ts";
-import { Register } from "../operands/register.ts";
-import { Immediate } from "../operands/immediate.ts";
+import { Register } from "../../util/operands/register.ts";
+import { Immediate } from "../../util/operands/immediate.ts";
 import { InstructionAfterEncode } from "./after-encode.tsx";
 
 abstract class LiteralInstruction {

@@ -1,5 +1,5 @@
 import { EncodedInstructionDisplay } from "../../components/encoded-instr.tsx";
-import { bin32BitToHex } from "../operands/numbers.ts";
+import { bin32BitToHex } from "../../util/operands/numbers.ts";
 
 class InstructionAfterEncode {
     private _parts: string[];
