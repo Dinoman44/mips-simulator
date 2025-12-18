@@ -190,7 +190,11 @@ function HelpTab() {
               <p>
                 Pseudoinstructions (like <code>move</code>)
                 and floating-point operations (like <code>add.s</code>, <code>mul.d</code>)
-                are <strong>not</strong> supported. The full list is below:
+                are <strong>not</strong> supported. The supported instructions are below:
+              </p>
+              <p>
+                You can also view this list in more detail with examples
+                and short explanations <a href="/pages/instruction-list.html">here</a>.
               </p>
               <Tabs
                 id="instructions-list"

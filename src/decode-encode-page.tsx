@@ -18,6 +18,7 @@ createRoot(document.getElementById('main')!).render(
       <Encoder />
       <Decoder />
     </Row>
+    <hr />
     <HelpTab />
   </StrictMode>,
 )

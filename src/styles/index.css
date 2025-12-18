@@ -12,22 +12,25 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #647eff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #2d37e8;
+body {
+  background-color: #191d24;
 }
 
-a.btn:hover, button.btn:hover {
-  background-color: #103a6a;
-  border-color: #054690;
+a {
+  color: #4eaaff;
+  text-decoration: none;
+}
+a:hover {
+  color: #1a8cff;
+  font-weight: 500;
 }
 
 a.btn, button.btn {
   background-color: #032c5a;
+  border-color: #054690;
+}
+a.btn:hover, button.btn:hover {
+  background-color: #103a6a;
   border-color: #054690;
 }
 
@@ -36,11 +39,6 @@ sup {
   font-variant: small-caps;
   vertical-align: super;
   color: rgb(18, 164, 205);
-}
-
-body {
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #191d24;
 }
 
 .error {
