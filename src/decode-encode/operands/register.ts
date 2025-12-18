@@ -52,23 +52,23 @@ class Register {
     static readonly reservedRegisters: Set<number> = new Set<number>([1, 26, 27, 28, 29, 30, 31]);
 
     static parseRegisterForNumber(reg: string): Register {
-        if (/^\$(zero|[vats]\d+)$/gi.test(reg)) {
-            if (this.register_mapping.isValidRegister(reg)) {
-                return new Register(reg, this.register_mapping.getNumber(reg)!);
-            }
-            throw new Error(`"${reg}" is not a valid register.`);
-        } else if (/^\$\d+$/gi.test(reg)) {
+        if (/^\$\d+$/gi.test(reg)) {
             let regNum: number = parseInt(reg.slice(1), 10);
-
+            console.log(regNum);
             if (this.register_mapping.isValidNumber(regNum)) {
                 return new Register(this.register_mapping.getRegister(regNum)!, regNum);
             } else if (regNum < 0 || regNum > 31) {
                 throw new Error(`Register number out of range (0-31): ${reg}`);
-            } else if (regNum in this.reservedRegisters) {
+            } else if (this.reservedRegisters.has(regNum)) {
                 throw new Error(`Register number ${regNum} is reserved and cannot be used.`);
             } else {
                 throw new Error(`${regNum} is not a valid register.`);
             }
+        } else if (/^\$(zero|[vats]\d+)$/gi.test(reg)) {
+            if (this.register_mapping.isValidRegister(reg)) {
+                return new Register(reg, this.register_mapping.getNumber(reg)!);
+            }
+            throw new Error(`"${reg}" is not a valid register.`);
         } else {
             throw new Error(`Invalid register format: ${reg}`);
         }
