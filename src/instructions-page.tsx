@@ -17,9 +17,9 @@ createRoot(document.getElementById('main')!).render(
     <InstructionDetailsTab
         titles={["R-Format Instructions", "I-Format Instructions", "J-Format Instructions"]}
         details={[
-            RFormatInstructionDetails.getDetails(),
-            IFormatInstructionDetails.getDetails(),
-            JFormatInstructionDetails.getDetails()
+          RFormatInstructionDetails.getDetails(),
+          IFormatInstructionDetails.getDetails(),
+          JFormatInstructionDetails.getDetails()
         ]}
     />
   </StrictMode>,
