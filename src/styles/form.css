@@ -9,9 +9,11 @@ button.form-submit {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button.form-submit:hover {
   border-color: #646cff;
 }
+
 button.form-submit:focus,
 button.form-submit:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;

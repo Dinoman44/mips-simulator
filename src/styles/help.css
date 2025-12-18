@@ -1,0 +1,8 @@
+button.nav-link.active[role="tab"] {
+    background-color: #202b3e;
+}
+
+.list-group-item {
+    background-color: #191d24;
+    padding-left: 1.5rem;
+}
