@@ -14,21 +14,26 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #647eff;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #2d37e8;
+}
+
+a.btn:hover, button.btn:hover {
+  background-color: #103a6a;
+  border-color: #054690;
+}
+
+a.btn, button.btn {
+  background-color: #032c5a;
+  border-color: #054690;
 }
 
 body {
   color: rgba(255, 255, 255, 0.87);
   background-color: #191d24;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
 }
 
 .error {
