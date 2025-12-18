@@ -145,9 +145,13 @@ function HelpTab() {
               <p>
                 The registers <code>$1</code>(<code>$at</code>), <code>$26</code>(<code>$k0</code>),
                 <code>$27</code>(<code>$k1</code>), <code>$28</code>(<code>$gp</code>),
-                <code>$29</code>(<code>$sp</code>), <code>$30</code>(<code>$fp</code>), and
-                <code>$31</code>(<code>$ra</code>) have special purposes
+                <code>$29</code>(<code>$sp</code>), <code>$30</code>(<code>$fp</code>),
+                and <code>$31</code>(<code>$ra</code>) have special purposes
                 and are currently not supported for encoding.
+              </p>
+              <p>
+                The <code>$zero</code> register (<code>$0</code>) is read-only and always contains the value 0.
+                It cannot be used as a destination register in instructions.
               </p>
             </Card.Body>
           </Card>
@@ -158,6 +162,7 @@ function HelpTab() {
             <Card.Body>
               <p>
                 Currently only integers are supported. Word size in MIPS is 32 bits (4 bytes).
+                Immediates can be specified in decimal, binary or hexadecimal format.
               </p>
               <p>
                 I-type instructions can take a 16-bit signed immediate value.
