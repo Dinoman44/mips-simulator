@@ -6,10 +6,3 @@ button.nav-link.active[role="tab"] {
     background-color: #191d24;
     padding-left: 1.5rem;
 }
-
-code {
-    background-color: #2d3a4b;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    color: rgb(217, 98, 62);
-}

@@ -57,3 +57,10 @@ sup {
     background-color: #f9f9f9;
   }
 }
+
+code {
+    background-color: #2d3a4b;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    color: rgb(217, 98, 62);
+}

@@ -18,3 +18,51 @@ button.form-submit:focus,
 button.form-submit:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
+.form-control {
+  border-radius: 0px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.input-container {
+    position: relative;
+    display: inline-block;
+    transition: 0.6s ease-in;
+    width: 91%;
+}
+
+.input-container input {
+    border: none;
+    padding: 0.5rem;
+    outline: none;
+    transition: 0.6s ease-in;
+    width: 100%;
+}
+
+.input-container::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: linear-gradient(to right, #d99eed, #bd05e6 40%, #ff7f7f 60%, #d90000 75%);
+    background-size: 250%;
+    background-position: right;
+    transition: 0.6s cubic-bezier(0.8, 0, 0.2, 1);
+}
+
+.input-container:focus-within {
+    box-shadow: -3px 1px 6px #bd05e679, 3px 1px 6px #ad5ec87a;
+}
+
+.input-container:focus-within input {
+  color: #fff;
+    transition: 0.6s ease-in;
+    outline: none !important;
+}
+
+.input-container:focus-within::after {
+    background-position: left;
+}

@@ -7,6 +7,7 @@ import "../styles/form.css";
 import { Alert, Button, Card, Col, Form, Row, Tab, Tabs } from 'react-bootstrap';
 import { InstructionAfterDecode } from '../decode-encode/decoder/after-decode.tsx';
 import { IFormatInstructionList, JFormatInstructionList,RFormatInstructionList } from '../util/mips-instructions/instruction-list.ts';
+import { FancyInput } from './fancy-input.tsx';
 
 function Decoder() {
   const [input, setInput] = useState("");
@@ -52,13 +53,12 @@ function Decoder() {
               >
                 Warning: entering a number without 0b or 0x may lead to incorrect decoding.
               </p>
-              <Form.Control
+              <FancyInput
                 type="text"
                 value={input}
                 onChange={binHexWarn}
                 required
-                size="lg"
-              />
+                size="lg" />
             </Form.Group>
             <Button className="form-submit" type="submit">Decode</Button>
           </Form>
@@ -98,13 +98,12 @@ function Encoder() {
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="mipsInput">
               <Form.Label>MIPS Instruction:</Form.Label>
-              <Form.Control
+              <FancyInput
                 type="text"
                 value={input}
-                onChange={e => setInput(e.target.value)}
+                onChange={(e: any) => setInput(e.target.value)}
                 required
-                size="lg"
-              />
+                size="lg" />
             </Form.Group>
             <Button className="form-submit" type="submit">Encode</Button>
           </Form>

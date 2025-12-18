@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import "../styles/form.css";
 
 function Simulator() {
     const [assemblyCode, setAssemblyCode] = useState("");
