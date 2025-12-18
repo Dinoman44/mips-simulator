@@ -1,14 +1,24 @@
 import { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Alert, Button, Form } from "react-bootstrap";
 import "../styles/form.css";
+import "../styles/encodes.css";
 
 function Simulator() {
     const [assemblyCode, setAssemblyCode] = useState("");
+    const [output, setOutput] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulation logic would go here
+        try {
+            setOutput("hello");
+            setError(null);
+        } catch (err: any) {
+            setOutput(null);
+            setError(err.message || "Failed to decode instruction.");
+        }
     }
+
     return (
         <>
             <Form onSubmit={handleSubmit}>
@@ -18,6 +28,16 @@ function Simulator() {
                 </Form.Group>
                 <Button className="form-submit" type="submit">Run Simulation</Button>
             </Form>
+            <br />
+            {output && (
+                <>
+                    <h4>Program output:</h4>
+                    <p className="encodes-container">{output}</p>
+                </>
+            )}
+            {error && (
+                <Alert variant="danger">{error}</Alert>
+            )}
         </>
     )
 }
