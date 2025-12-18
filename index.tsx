@@ -14,7 +14,7 @@ createRoot(document.getElementById('header')!).render(
 
 createRoot(document.getElementById('main')!).render(
   <StrictMode>
-    <Row>
+    <Row xs={1} md={3} className="g-4">
       <Col>
         <Card>
           <Card.Body>
@@ -36,7 +36,7 @@ createRoot(document.getElementById('main')!).render(
       <Col>
         <Card>
           <Card.Body>
-            <Card.Title as="h3">(Beta) Simulator</Card.Title>
+            <Card.Title as="h3">Simulator<sup>Beta</sup></Card.Title>
             <p>Try out the MIPS program simulator!</p>
             <Button href="/pages/simulator.html" variant="primary">Go to Simulator</Button>
           </Card.Body>

@@ -31,6 +31,13 @@ a.btn, button.btn {
   border-color: #054690;
 }
 
+sup {
+  font-size: 0.5em;
+  font-variant: small-caps;
+  vertical-align: super;
+  color: rgb(18, 164, 205);
+}
+
 body {
   color: rgba(255, 255, 255, 0.87);
   background-color: #191d24;

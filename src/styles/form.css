@@ -5,13 +5,13 @@ button.form-submit {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #2e4d5c;
+  background-color: #104270;
   cursor: pointer;
   transition: border-color 0.25s;
 }
 
-button.form-submit:hover {
-  border-color: #646cff;
+button.form-submit:active {
+  background-color: #0d3358;
 }
 
 button.form-submit:focus,
