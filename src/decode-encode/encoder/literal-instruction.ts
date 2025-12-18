@@ -47,6 +47,10 @@ class RformatLiteralInstruction extends LiteralInstruction {
             let rd: Register = Register.parseRegisterForNumber(this.operands[0]);
             let shamt: Immediate = Immediate.makeUnsignedImmediate(this.operands[2], 5);
 
+            if (rd.number() === 0) {
+                throw new Error(`Cannot use $zero as destination register in instruction "${this.line}".`);
+            }
+
             return new InstructionAfterEncode(
                 ["opcode", "rs", "rt", "rd", "shamt", "funct"],
                 [opcode, rs, rt.binaryString(), rd.binaryString(), shamt.binaryString(), funct]
@@ -59,6 +63,10 @@ class RformatLiteralInstruction extends LiteralInstruction {
             let opcode: string = "000000";
             let funct: string = RFormatInstructionList.getFunctCode(this.instr);
             let shamt: string = "00000";
+
+            if (rd.number() === 0) {
+                throw new Error(`Cannot use $zero as destination register in instruction "${this.line}".`);
+            }
 
             return new InstructionAfterEncode(
                 ["opcode", "rs", "rt", "rd", "shamt", "funct"],
@@ -106,6 +114,10 @@ class IformatLiteralInstruction extends LiteralInstruction {
             rt = Register.parseRegisterForNumber(this.operands[0]);
             rs = Register.parseRegisterForNumber(this.operands[1]);
             immediate = Immediate.makeSignedImmediate(this.operands[2]);
+        }
+
+        if (rt.number() === 0 && (this.instr !== "beq" && this.instr !== "bne")) {
+            throw new Error(`Cannot use $zero as destination register in instruction "${this.line}".`);
         }
 
         return new InstructionAfterEncode(
