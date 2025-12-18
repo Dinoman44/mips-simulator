@@ -12,7 +12,7 @@ function Header() {
             <Nav className="me-auto">
                 <Nav.Link href="/pages/decode-encode.html">Encoder-Decoder</Nav.Link>
                 <Nav.Link href="/pages/mips.html">MIPS Instructions</Nav.Link>
-                <Nav.Link href="#">Simulator<sup>Beta</sup></Nav.Link>
+                <Nav.Link href="/pages/simulator.html">Simulator<sup>Beta</sup></Nav.Link>
             </Nav>
             </Navbar.Collapse>
         </Container>
