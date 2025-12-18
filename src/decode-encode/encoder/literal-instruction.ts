@@ -88,6 +88,12 @@ class IformatLiteralInstruction extends LiteralInstruction {
             rs = Register.parseRegisterForNumber(this.operands[0]);
             rt = Register.parseRegisterForNumber(this.operands[1]);
             immediate = Immediate.makeSignedImmediate(this.operands[2]);
+        } else if (this.instr === "lui") {
+            // lui rt, immediate
+            opcode = IFormatInstructionList.getOpcode(this.instr);
+            rt = Register.parseRegisterForNumber(this.operands[0]);
+            rs = Register.parseRegisterForNumber("$0"); // rs is always $zero
+            immediate = Immediate.makeUnsignedImmediate(this.operands[1], 16);
         } else if (UnsignedIFormatInstructionList.isValid(this.instr)) {
             // unsigned I-format instruction: instr rt, rs, immediate
             opcode = IFormatInstructionList.getOpcode(this.instr);

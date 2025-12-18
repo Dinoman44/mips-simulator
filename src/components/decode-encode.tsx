@@ -147,7 +147,7 @@ function HelpTab() {
                 so <code>0b101</code> is treated as the signed integer <code>-3</code>.
               </p>
               <p>
-                Some I-type instructions (like <code>andiu</code>, <code>sltiu</code>) take
+                Some I-type instructions (like <code>andi</code>, <code>sltiu</code>) take
                 a 16-bit unsigned immediate value instead.
               </p>
               <p>
