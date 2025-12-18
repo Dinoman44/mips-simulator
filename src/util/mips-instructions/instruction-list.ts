@@ -138,10 +138,10 @@ class IFormatInstructionList {
 
 class UnsignedIFormatInstructionList extends IFormatInstructionList {
     private static readonly unsignedInstructionPairs: [string, string][] = [
-        ["addiu", "001001"],
-        ["lbu", "100100"],
-        ["lhu", "100101"],
-        ["sltiu", "001011"],
+        ["andi", "001100"],
+        ["lui", "001111"],
+        ["ori", "001101"],
+        ["sltiu", "001011"]
     ];
     private static readonly unsignedInstructionMapping: TwoWayMapInstructionToCode = new TwoWayMapInstructionToCode(
         this.unsignedInstructionPairs
