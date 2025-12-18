@@ -4,7 +4,7 @@ import { EncodedInstruction } from '../decode-encode/decoder/encoded-instruction
 import { useState } from 'react';
 import "../styles/card.css";
 import "../styles/form.css";
-import { Button, Card, Col, Form, Row, Tab, Tabs } from 'react-bootstrap';
+import { Alert, Button, Card, Col, Form, Row, Tab, Tabs } from 'react-bootstrap';
 import { InstructionAfterDecode } from '../decode-encode/decoder/after-decode.tsx';
 import { IFormatInstructionList, JFormatInstructionList,RFormatInstructionList } from '../util/mips-instructions/instruction-list.ts';
 
@@ -12,6 +12,17 @@ function Decoder() {
   const [input, setInput] = useState("");
   const [decoding, setDecoding] = useState<React.JSX.Element | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const binHexWarningText = document.getElementById("binHexWarning");
+
+  const binHexWarn = (e: React.FormEvent) => {
+    const value = (e.target as HTMLInputElement).value.toLowerCase();
+    if (value.length > 2 && !value.startsWith("0b") && !value.startsWith("0x")) {
+      binHexWarningText?.removeAttribute("hidden");
+    } else {
+      binHexWarningText?.setAttribute("hidden", "true");
+    }
+    setInput(value);
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,10 +44,18 @@ function Decoder() {
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="mipsInput">
               <Form.Label>MIPS Instruction (in bin/hex):</Form.Label>
+              <p><code>0b...</code> for a binary encoding, <code>0x...</code> for a hexadecimal encoding.</p>
+              <p
+                id="binHexWarning"
+                hidden
+                className="error"
+              >
+                Warning: entering a number without 0b or 0x may lead to incorrect decoding.
+              </p>
               <Form.Control
                 type="text"
                 value={input}
-                onChange={e => setInput(e.target.value)}
+                onChange={binHexWarn}
                 required
                 size="lg"
               />
@@ -46,7 +65,7 @@ function Decoder() {
           <hr/>
           {decoding && decoding}
           {error && (
-            <p className="error">{error}</p>
+            <Alert variant="danger">{error}</Alert>
           )}
         </Card.Body>
       </Card>
@@ -92,7 +111,7 @@ function Encoder() {
           <hr/>
           {encoding && encoding}
           {error && (
-            <p className="error">{error}</p>
+            <Alert variant="danger">{error}</Alert>
           )}
         </Card.Body>
       </Card>
