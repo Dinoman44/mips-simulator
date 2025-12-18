@@ -44,6 +44,10 @@ class RFormatEncodedInstruction extends EncodedInstruction {
         const binShamt = `0b${shamt}`;
         const shamtVal: Immediate = Immediate.makeUnsignedImmediate(binShamt, 5);
 
+        if (rdReg.number() === 0) {
+            throw new Error(`Cannot use $zero as destination register in encoded instruction "${this.line}".`);
+        }
+
         if (ShiftInstructionList.isValid(funct)) {
             // shift instruction: sll/srl rd, rt, shamt
             return new InstructionAfterDecode(
@@ -72,6 +76,10 @@ class IFormatEncodedInstruction extends EncodedInstruction {
         const rtReg: Register = Register.parseRegisterForLabel(parseInt(rt, 2));
         const binImmediate = `0b${immediate}`;
         const immediateVal: Immediate = Immediate.makeSignedImmediate(binImmediate);
+
+        if (rtReg.number() === 0 && (instr !== "beq" && instr !== "bne")) {
+            throw new Error(`Cannot use $zero as destination register in encoded instruction "${this.line}".`);
+        }
 
         if (MemOpInstructionList.isValid(this.parsedInstruction.getOpcode())) {
             // memory operation: memop rt, immediate(rs)
