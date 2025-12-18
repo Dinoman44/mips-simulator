@@ -30,26 +30,40 @@ class RFormatInstructionDetails {
         "subu $s2, $s3, $s4"
     ];
     private static _instructionInfos: string[] = [
-        "Adds the values in registers $rs and $rt and stores the result in register $rd.\nPerforms 2's complement signed integer addition.\nRaises an exception on overflow.",
-        "Adds the values in registers $rs and $rt and stores the result in register $rd.\nPerforms unsigned integer addition.\nDoes not raise an exception on overflow.",
-        "Performs a bitwise AND operation between the values in registers $rs and $rt and stores the result in register $rd.",
-        "Performs a bitwise NOR operation between the values in registers $rs and $rt and stores the result in register $rd.",
-        "Performs a bitwise OR operation between the values in registers $rs and $rt and stores the result in register $rd.",
-        "Sets register $rd to 1 if the value in register $rs is less than the value in register $rt (considered as signed integers); otherwise, sets $rd to 0.",
-        "Sets register $rd to 1 if the value in register $rs is less than the value in register $rt (considered as unsigned integers); otherwise, sets $rd to 0.",
-        "Shifts the value in register $rt left by the number of bits specified in shamt and stores the result in register $rd.\nFills the least significant bits with zeros, does not rotate bits.\nShamt is a 5-bit unsigned integer(0-31).",
-        "Shifts the value in register $rt right by the number of bits specified in shamt and stores the result in register $rd.\nFills the most significant bits with zeros, does not rotate bits.\nShamt is a 5-bit unsigned integer(0-31).",
-        "Subtracts the value in register $rt from the value in register $rs and stores the result in register $rd.\nPerforms 2's complement signed integer subtraction.\nRaises an exception on overflow.",
-        "Subtracts the value in register $rt from the value in register $rs and stores the result in register $rd.\nPerforms unsigned integer subtraction.\nDoes not raise an exception on overflow."
+        "Adds the values in registers `$rs` and `$rt` and stores the result in register `$rd`.\nPerforms 2's complement signed integer addition.\nRaises an exception on overflow.",
+        "Adds the values in registers `$rs` and `$rt` and stores the result in register `$rd`.\nPerforms unsigned integer addition.\nDoes not raise an exception on overflow.",
+        "Performs a bitwise AND operation between the values in registers `$rs` and `$rt` and stores the result in register `$rd`.",
+        "Performs a bitwise NOR operation between the values in registers `$rs` and `$rt` and stores the result in register `$rd`.",
+        "Performs a bitwise OR operation between the values in registers `$rs` and `$rt` and stores the result in register `$rd`.",
+        "Sets register `$rd` to 1 if the value in register `$rs` is less than the value in register `$rt` (considered as signed integers); otherwise, sets `$rd` to 0.",
+        "Sets register `$rd` to 1 if the value in register `$rs` is less than the value in register `$rt` (considered as unsigned integers); otherwise, sets `$rd` to 0.",
+        "Shifts the value in register `$rt` left by the number of bits specified in shamt and stores the result in register `$rd`.\nFills the least significant bits with zeros, does not rotate bits.\nShamt is a 5-bit unsigned integer(0-31).",
+        "Shifts the value in register `$rt` right by the number of bits specified in shamt and stores the result in register `$rd`.\nFills the most significant bits with zeros, does not rotate bits.\nShamt is a 5-bit unsigned integer(0-31).",
+        "Subtracts the value in register `$rt` from the value in register `$rs` and stores the result in register `$rd`.\nPerforms 2's complement signed integer subtraction.\nRaises an exception on overflow.",
+        "Subtracts the value in register `$rt` from the value in register `$rs` and stores the result in register `$rd`.\nPerforms unsigned integer subtraction.\nDoes not raise an exception on overflow."
+    ];
+    private static _instructionCtranslations: string[] = [
+        "rd = rs + rt",
+        "rd = rs + rt",
+        "rd = rs & rt",
+        "rd = ~(rs | rt)",
+        "rd = rs | rt",
+        "rd = (rs < rt) ? 1 : 0",
+        "rd = (rs < rt) ? 1 : 0",
+        "rd = rt << shamt",
+        "rd = rt >> shamt",
+        "rd = rs - rt",
+        "rd = rs - rt"
     ];
 
-    static getDetails(): [string, string, string, string][] {
+    static getDetails(): [string, string, string, string, string][] {
         return this._instructionList.map(
             (instr, i) => [
                 instr,
                 this._instructionUsages[i],
                 this._instructionUsageExamples[i],
-                this._instructionInfos[i]
+                this._instructionInfos[i],
+                this._instructionCtranslations[i]
             ]
         );
     }
@@ -98,32 +112,52 @@ class IFormatInstructionDetails {
     ];
 
     private static _instructionInfos: string[] = [
-        "Adds the sign-extended immediate value to the value in register $rs and stores the result in register $rt.\nRaises an exception on overflow.\nImmediate is a 16-bit signed integer.",
-        "Adds the sign-extended immediate value to the value in register $rs and stores the result in register $rt.\nDoes not raise an exception on overflow.\nImmediate is a 16-bit signed integer, but treated as unsigned for addition.",
-        "Performs a bitwise AND operation between the value in register $rs and the zero-extended immediate value, storing the result in register $rt.\nImmediate is a 16-bit unsigned integer.",
-        "Compares the values in registers $rs and $rt; if they are equal, branches to the instruction computed by adding the sign-extended offset (immediate value) to the current instruction number + 1.\nOffset is a 16-bit signed integer representing number of instructions.\nIn reality it calculates the target PC address: target = PC + 4 + (immediate << 2)",
-        "Compares the values in registers $rs and $rt; if they are not equal, branches to the instruction computed by adding the sign-extended offset (immediate value) to the current instruction number + 1.\nOffset is a 16-bit signed integer representing number of instructions.\nIn reality it calculates the target PC address: target = PC + 4 + (immediate << 2)",
-        "Loads a byte from memory at the address computed by adding the sign-extended immediate value to the value in register $rs, and stores it in the least significant byte of register $rt.\nThe upper 24 bits of $rt are filled with zeros.\nImmediate is a 16-bit signed integer.",
-        "Loads a halfword (2 bytes) from memory at the address computed by adding the sign-extended immediate value to the value in register $rs, and stores it in the least significant 16 bits of register $rt.\nThe upper 16 bits of $rt are filled with zeros.\nImmediate is a 16-bit signed integer.",
-        "Loads a word from memory at the address computed by adding the sign-extended immediate value to the value in register $rs, and stores it in register $rt.\nImmediate is a 16-bit signed integer.\nUsed along with sc instruction for atomic read-modify-write operations for multithreaded synchronisation.",
-        "Loads the immediate value into the upper 16 bits of register $rt, setting the lower 16 bits to zero.\nImmediate is a 16-bit unsigned integer.",
-        "Loads a word from memory at the address computed by adding the sign-extended immediate value to the value in register $rs, and stores it in register $rt.\nImmediate is a 16-bit signed integer.",
-        "Performs a bitwise OR operation between the value in register $rs and the zero-extended immediate value, storing the result in register $rt.\nImmediate is a 16-bit unsigned integer.",
-        "Sets register $rt to 1 if the value in register $rs is less than the sign-extended immediate value (considered as signed integers); otherwise, sets $rt to 0.\nImmediate is a 16-bit signed integer.",
-        "Sets register $rt to 1 if the value in register $rs is less than the zero-extended immediate value (considered as unsigned integers); otherwise, sets $rt to 0.\nImmediate is a 16-bit unsigned integer.",
-        "Stores the least significant byte of register $rt into memory at the address computed by adding the sign-extended immediate value to the value in register $rs.\nImmediate is a 16-bit signed integer.",
-        "Store conditionally: if the processor's LLbit is set, stores the word in register $rt into memory at the address computed by adding the sign-extended immediate value to the value in register $rs, and then clears the LLbit.\nImmediate is a 16-bit signed integer.\nUsed along with ll instruction for atomic read-modify-write operations for multithreaded synchronisation.",
-        "Stores the least significant halfword (2 bytes) of register $rt into memory at the address computed by adding the sign-extended immediate value to the value in register $rs.\nImmediate is a 16-bit signed integer.",
-        "Stores the word in register $rt into memory at the address computed by adding the sign-extended immediate value to the value in register $rs.\nImmediate is a 16-bit signed integer."
+        "Adds the sign-extended immediate value to the value in register `$rs` and stores the result in register `$rt`.\nRaises an exception on overflow.\nImmediate is a 16-bit signed integer.",
+        "Adds the sign-extended immediate value to the value in register `$rs` and stores the result in register `$rt`.\nDoes not raise an exception on overflow.\nImmediate is a 16-bit signed integer, but treated as unsigned for addition.",
+        "Performs a bitwise AND operation between the value in register `$rs` and the zero-extended immediate value, storing the result in register `$rt`.\nImmediate is a 16-bit unsigned integer.",
+        "Compares the values in registers `$rs` and `$rt`; if they are equal, branches to the instruction computed by adding the sign-extended offset (immediate value) to the current instruction number + 1.\nOffset is a 16-bit signed integer representing number of instructions.\nIn reality it calculates the target PC address: target = PC + 4 + (immediate << 2)",
+        "Compares the values in registers `$rs` and `$rt`; if they are not equal, branches to the instruction computed by adding the sign-extended offset (immediate value) to the current instruction number + 1.\nOffset is a 16-bit signed integer representing number of instructions.\nIn reality it calculates the target PC address: target = PC + 4 + (immediate << 2)",
+        "Loads a byte from memory at the address computed by adding the sign-extended immediate value to the value in register `$rs`, and stores it in the least significant byte of register `$rt`.\nThe upper 24 bits of `$rt` are filled with zeros.\nImmediate is a 16-bit signed integer.",
+        "Loads a halfword (2 bytes) from memory at the address computed by adding the sign-extended immediate value to the value in register `$rs`, and stores it in the least significant 16 bits of register `$rt`.\nThe upper 16 bits of `$rt` are filled with zeros.\nImmediate is a 16-bit signed integer.",
+        "Loads a word from memory at the address computed by adding the sign-extended immediate value to the value in register `$rs`, and stores it in register `$rt`.\nImmediate is a 16-bit signed integer.\nUsed along with sc instruction for atomic read-modify-write operations for multithreaded synchronisation.",
+        "Loads the immediate value into the upper 16 bits of register `$rt`, setting the lower 16 bits to zero.\nImmediate is a 16-bit unsigned integer.",
+        "Loads a word from memory at the address computed by adding the sign-extended immediate value to the value in register `$rs`, and stores it in register `$rt`.\nImmediate is a 16-bit signed integer.",
+        "Performs a bitwise OR operation between the value in register `$rs` and the zero-extended immediate value, storing the result in register `$rt`.\nImmediate is a 16-bit unsigned integer.",
+        "Sets register `$rt` to 1 if the value in register `$rs` is less than the sign-extended immediate value (considered as signed integers); otherwise, sets `$rt` to 0.\nImmediate is a 16-bit signed integer.",
+        "Sets register `$rt` to 1 if the value in register `$rs` is less than the zero-extended immediate value (considered as unsigned integers); otherwise, sets `$rt` to 0.\nImmediate is a 16-bit unsigned integer.",
+        "Stores the least significant byte of register `$rt` into memory at the address computed by adding the sign-extended immediate value to the value in register `$rs`.\nImmediate is a 16-bit signed integer.",
+        "Store conditionally: if the processor's LLbit is set, stores the word in register `$rt` into memory at the address computed by adding the sign-extended immediate value to the value in register `$rs`, and then clears the LLbit.\nImmediate is a 16-bit signed integer.\nUsed along with ll instruction for atomic read-modify-write operations for multithreaded synchronisation.",
+        "Stores the least significant halfword (2 bytes) of register `$rt` into memory at the address computed by adding the sign-extended immediate value to the value in register `$rs`.\nImmediate is a 16-bit signed integer.",
+        "Stores the word in register `$rt` into memory at the address computed by adding the sign-extended immediate value to the value in register `$rs`.\nImmediate is a 16-bit signed integer."
+    ];
+    private static _instructionCtranslations: string[] = [
+        "rt = rs + immediate",
+        "rt = rs + immediate",
+        "rt = rs & immediate",
+        "if (rs == rt) PC = PC + 4 + (immediate << 2)",
+        "if (rs != rt) PC = PC + 4 + (immediate << 2)",
+        "rt = MEM[rs + immediate] (byte)",
+        "rt = MEM[rs + immediate] (halfword)",
+        "rt = MEM[rs + immediate] (word); processor.LLbit = 1",
+        "rt = immediate << 16",
+        "rt = MEM[rs + immediate] (word)",
+        "rt = rs | immediate",
+        "rt = (rs < immediate) ? 1 : 0",
+        "rt = (rs < immediate) ? 1 : 0",
+        "MEM[rs + immediate] = rt (byte)",
+        "if (processor.LLbit == 1) { MEM[rs + immediate] = rt; processor.LLbit = 0; }",
+        "MEM[rs + immediate] = rt (halfword)",
+        "MEM[rs + immediate] = rt (word)"
     ];
 
-    static getDetails(): [string, string, string, string][] {
+    static getDetails(): [string, string, string, string, string][] {
         return this._instructionList.map(
             (instr, i) => [
                 instr,
                 this._instructionUsages[i],
                 this._instructionUsageExamples[i],
-                this._instructionInfos[i]
+                this._instructionInfos[i],
+                this._instructionCtranslations[i]
             ]
         );
     }
@@ -141,14 +175,18 @@ class JFormatInstructionDetails {
     private static _instructionInfos: string[] = [
         "Jumps to the target PC address specified by the 26-bit address field.\nThe target address is computed by combining the upper 4 bits of the current PC + 4 with the 26-bit address shifted left by 2 bits to form a full 32-bit address.",
     ];
+    private static _instructionCtranslations: string[] = [
+        "PC = (PC + 4)[31:28] | (address << 2)",
+    ];
 
-    static getDetails(): [string, string, string, string][] {
+    static getDetails(): [string, string, string, string, string][] {
         return this._instructionList.map(
             (instr, i) => [
                 instr,
                 this._instructionUsages[i],
                 this._instructionUsageExamples[i],
-                this._instructionInfos[i]
+                this._instructionInfos[i],
+                this._instructionCtranslations[i]
             ]
         );
     }
