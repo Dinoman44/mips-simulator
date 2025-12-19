@@ -1,5 +1,5 @@
 import { ParsedEncodedInstruction } from "./instruction-parse.ts";
-import { BranchInstructionList, IFormatInstructionList, JFormatInstructionList, MemOpInstructionList, RFormatInstructionList, ShiftInstructionList, UnsignedIFormatInstructionList } from "../../util/mips-instructions/instruction-list.ts";
+import { BranchInstructionList, IFormatInstructionList, JFormatInstructionList, MemOpInstructionList, RFormatInstructionList, ShiftInstructionList, UnsignedIFormatInstructionList } from "../../util/instructions/instruction-list.ts";
 import { Register } from "../../util/operands/register.ts";
 import { Immediate } from "../../util/operands/immediate.ts";
 import { InstructionAfterDecode } from "./after-decode.tsx";

@@ -16,6 +16,10 @@ class TwoWayMapRegisterToNumber extends TwoWayMap<string, number> {
     isValidNumber(number: number): boolean {
         return this.isValidB(number);
     }
+
+    getAllRegisters(): string[] {
+        return this.getAllA();
+    }
 }
 
 class Register {

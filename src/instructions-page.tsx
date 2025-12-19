@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/index.css'
 import { Header } from './components/header.tsx';
 import { InstructionDetailsTab } from './components/instruction-details-tab.tsx';
-import { RFormatInstructionDetails, IFormatInstructionDetails, JFormatInstructionDetails } from './util/mips-instructions/instructions-details.ts';
+import { RFormatInstructionDetails, IFormatInstructionDetails, JFormatInstructionDetails } from './util/instructions/instructions-details.ts';
 
 createRoot(document.getElementById('header')!).render(
   <StrictMode>
