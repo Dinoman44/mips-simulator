@@ -22,6 +22,7 @@ class Register {
     private readonly _label: string;
     private readonly _number: number;
     private readonly _binaryString: string;
+    private _binValue: string = "0".repeat(32);
     static readonly registerMapping: TwoWayMapRegisterToNumber = new TwoWayMapRegisterToNumber([
         ["$zero", 0],
         ["$v0", 2],
@@ -105,6 +106,14 @@ class Register {
 
     binaryString(): string {
         return this._binaryString;
+    }
+
+    value(): string {
+        return this._binValue;
+    }
+    
+    setValue(binValue: string): void {
+        this._binValue = binValue;
     }
 }
 
