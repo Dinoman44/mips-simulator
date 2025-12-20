@@ -112,6 +112,13 @@ function twosComplement(num: number): string {
     }
 }
 
+function binary32BitToSignedInt(bin: string): number {
+    if (bin.length !== 32) {
+        throw new Error(`Binary string length "${bin.length}" is not 32 bits.`);
+    }
+    return parseInt(bin, 2) >> 0;
+}
+
 /**********************************************************************/
 /**************** Convert 32-bit binary to hexadecimal ****************/
 /**********************************************************************/
@@ -132,5 +139,6 @@ export {
     bin32BitToHex,
     hexTo32bitSigned,
     binTo32bitSigned,
-    anyTo32bitSigned
+    anyTo32bitSigned,
+    binary32BitToSignedInt
 }

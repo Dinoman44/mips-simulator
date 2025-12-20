@@ -1,4 +1,4 @@
-import { isBinary, isHexadecimal, hexToBinary32BitUnsigned, binTo32bitUnsigned, anyTo32bitUnsigned, bin32BitToHex, binTo32bitSigned, hexTo32bitSigned, anyTo32bitSigned } from "./numbers.ts";
+import { isBinary, isHexadecimal, hexToBinary32BitUnsigned, binTo32bitUnsigned, anyTo32bitUnsigned, bin32BitToHex, binTo32bitSigned, hexTo32bitSigned, anyTo32bitSigned, binary32BitToSignedInt } from "./numbers.ts";
 
 class Immediate {
     private readonly _value: number;
@@ -22,7 +22,6 @@ class Immediate {
         } else if (isHexadecimal(value)) {
             return hexTo32bitSigned(value)
         } else {
-            console.log("here");
             return anyTo32bitSigned(value);
         }
     }
@@ -35,10 +34,8 @@ class Immediate {
     }
 
     static makeSignedImmediate(value: string, width: number = 16): Immediate {
-        console.log(value);
         const binaryString = Immediate.parseImmediateSigned(value);
-        console.log(binaryString);
-        const signedValue = parseInt(binaryString, 2) >> 0;
+        const signedValue = binary32BitToSignedInt(binaryString);
         const hexString = bin32BitToHex(binaryString);
         return new Immediate(signedValue, binaryString, hexString, width);
     }
