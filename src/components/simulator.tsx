@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
+import { Simulator } from "../simulator/simulator";
 import "../styles/form.css";
 import "../styles/encodes.css";
 
-function Simulator() {
+function SimulatorComponent() {
     const [assemblyCode, setAssemblyCode] = useState("");
     const [output, setOutput] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const simulator = new Simulator(assemblyCode);
         try {
-            setOutput("hello");
+            simulator.run();
+            setOutput(simulator.getRegistersState().toString());
             setError(null);
         } catch (err: any) {
             setOutput(null);
@@ -42,4 +45,4 @@ function Simulator() {
     )
 }
 
-export { Simulator };
+export { SimulatorComponent };

@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/index.css'
-import { Simulator } from './components/simulator.tsx';
+import { SimulatorComponent } from './components/simulator.tsx';
 import { Header } from './components/header.tsx';
 
 createRoot(document.getElementById('header')!).render(
@@ -14,6 +14,6 @@ createRoot(document.getElementById('header')!).render(
 createRoot(document.getElementById('main')!).render(
   <StrictMode>
     <h1>MIPS Simulator<sup>Beta</sup></h1>
-    <Simulator />
+    <SimulatorComponent />
   </StrictMode>,
 )
