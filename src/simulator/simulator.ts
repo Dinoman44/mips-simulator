@@ -22,7 +22,7 @@ class Simulator {
         }
     }
 
-    getRegistersState(): [number, string, string][] {
+    getRegistersState(): [number, string, string, string, string][] {
         return this.registers.getState();
     }
 }

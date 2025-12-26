@@ -15,13 +15,14 @@ function SimulatorComponent() {
         try {
             simulator.run();
             const registersState = simulator.getRegistersState();
-            // format as jsx table
             const outputLines = registersState.map(
-                ([num, label, value]) => (
+                ([num, label, binValue, decValue, hexValue]) => (
                     <tr>
                         <td>{label}</td>
                         <td>${num}</td>
-                        <td><p className="encodes-container">{value}</p></td>
+                        <td><p className="encodes-container">{binValue}</p></td>
+                        <td><p className="encodes-container">{decValue}</p></td>
+                        <td><p className="encodes-container">{hexValue}</p></td>
                     </tr>
                 )
             );
@@ -43,21 +44,23 @@ function SimulatorComponent() {
                 <Button className="form-submit" type="submit">Run Simulation</Button>
             </Form>
             <br />
+            {error && (
+                <Alert variant="danger">{error}</Alert>
+            )}
             <Table responsive>
                 <thead>
                     <tr>
                         <th>Register Number</th>
                         <th>Register Label</th>
                         <th>Register Value (binary)</th>
+                        <th>Register Value (decimal)</th>
+                        <th>Register Value (hexadecimal)</th>
                     </tr>
                 </thead>
                 <tbody>
                     {output}
                 </tbody>
             </Table>
-            {error && (
-                <Alert variant="danger">{error}</Alert>
-            )}
         </>
     )
 }

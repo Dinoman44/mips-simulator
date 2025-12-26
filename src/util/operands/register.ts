@@ -133,9 +133,9 @@ class RegisterBank {
         return this._registers[regNum];
     }
 
-    getState(): [number, string, string][] {
+    getState(): [number, string, string, string, string][] {
         return this._registers.map(
-            reg => [reg.number(), reg.label(), reg.value()]
+            reg => [reg.number(), reg.label(), reg.value(), parseInt(reg.value(), 2).toString(10), parseInt(reg.value(), 2).toString(16).toUpperCase().padStart(8, "0")]
         );
     }
 }
