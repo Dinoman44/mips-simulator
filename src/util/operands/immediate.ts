@@ -44,9 +44,6 @@ class Immediate {
         if (width < 1 || width > 32) {
             throw new Error(`Immediate width "${width}" is out of bounds (1-32).`);
         }
-        if (value > (1 << width) - 1 || value < -(1 << (width - 1))) {
-            throw new Error(`Immediate value "${value}" does not fit in ${width} bits.`);
-        }
         if (binaryString.length !== 32) {
             throw new Error(`Binary string length "${binaryString.length}" is not 32 bits.`);
         }
