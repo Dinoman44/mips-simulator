@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Alert, Button, Form } from "react-bootstrap";
+import { Alert, Button, Form, Table } from "react-bootstrap";
 import { Simulator } from "../simulator/simulator";
 import "../styles/form.css";
 import "../styles/encodes.css";
 
 function SimulatorComponent() {
     const [assemblyCode, setAssemblyCode] = useState("");
-    const [output, setOutput] = useState<string | null>(null);
+    const [output, setOutput] = useState<React.JSX.Element[] | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -14,7 +14,18 @@ function SimulatorComponent() {
         const simulator = new Simulator(assemblyCode);
         try {
             simulator.run();
-            setOutput(simulator.getRegistersState().toString());
+            const registersState = simulator.getRegistersState();
+            // format as jsx table
+            const outputLines = registersState.map(
+                ([num, label, value]) => (
+                    <tr>
+                        <td>{label}</td>
+                        <td>${num}</td>
+                        <td><p className="encodes-container">{value}</p></td>
+                    </tr>
+                )
+            );
+            setOutput(outputLines);
             setError(null);
         } catch (err: any) {
             setOutput(null);
@@ -32,12 +43,18 @@ function SimulatorComponent() {
                 <Button className="form-submit" type="submit">Run Simulation</Button>
             </Form>
             <br />
-            {output && (
-                <>
-                    <h4>Program output:</h4>
-                    <p className="encodes-container">{output}</p>
-                </>
-            )}
+            <Table responsive>
+                <thead>
+                    <tr>
+                        <th>Register Number</th>
+                        <th>Register Label</th>
+                        <th>Register Value (binary)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {output}
+                </tbody>
+            </Table>
             {error && (
                 <Alert variant="danger">{error}</Alert>
             )}
