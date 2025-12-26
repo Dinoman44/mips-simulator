@@ -29,6 +29,7 @@ class Register {
     private _binValue: string = "0".repeat(32);
     static readonly registerMapping: TwoWayMapRegisterToNumber = new TwoWayMapRegisterToNumber([
         ["$zero", 0],
+        ["$at", 1],
         ["$v0", 2],
         ["$v1", 3],
         ["$a0", 4],
@@ -53,6 +54,12 @@ class Register {
         ["$s7", 23],
         ["$t8", 24],
         ["$t9", 25],
+        ["$k0", 26],
+        ["$k1", 27],
+        ["$gp", 28],
+        ["$sp", 29],
+        ["$fp", 30],
+        ["$ra", 31]
     ]);
     static readonly reservedRegisterNumbers: Set<number> = new Set<number>([1, 26, 27, 28, 29, 30, 31]);
     static readonly reservedRegisterLabels: Set<string> = new Set<string>(["$at", "$k0", "$k1", "$gp", "$sp", "$fp", "$ra"]);
@@ -64,19 +71,13 @@ class Register {
                 return new Register(this.registerMapping.getRegister(regNum)!, regNum);
             } else if (regNum < 0 || regNum > 31) {
                 throw new Error(`Register number out of range (0-31): ${reg}`);
-            } else if (this.reservedRegisterNumbers.has(regNum)) {
-                throw new Error(`Register number ${regNum} is reserved and cannot be used.`);
             }
             throw new Error(`$${regNum} is not a valid register.`);
-        } else if (/^\$(zero|[vats]\d+)$/gi.test(reg)) {
+        } else if (/^\$(zero|at|gp|fp|sp|ra|[vatsk]\d+)$/gi.test(reg)) {
             if (this.registerMapping.isValidRegister(reg)) {
                 return new Register(reg, this.registerMapping.getNumber(reg)!);
-            } else if (this.reservedRegisterLabels.has(reg)) {
-                throw new Error(`Register "${reg}" is reserved and cannot be used.`);
             }
             throw new Error(`"${reg}" is not a valid register.`);
-        } else if (this.reservedRegisterLabels.has(reg)) {
-            throw new Error(`Register "${reg}" is reserved and cannot be used.`);
         } else {
             throw new Error(`Invalid register format: ${reg}`);
         }
@@ -87,8 +88,6 @@ class Register {
             return new Register(this.registerMapping.getRegister(regNum)!, regNum);
         } else if (regNum < 0 || regNum > 31) {
             throw new Error(`Register number out of range (0-31): ${regNum}`);
-        } else if (this.reservedRegisterNumbers.has(regNum)) {
-            throw new Error(`Register number ${regNum} is reserved and cannot be used.`);
         } else {
             throw new Error(`${regNum} is not a valid register.`);
         }
@@ -121,6 +120,27 @@ class Register {
     }
 }
 
+class RegisterBank {
+    private _registers: Register[];
+    
+    constructor() {
+        this._registers = Register.registerMapping.getAllRegisters().map(
+            regLabel => Register.parseRegisterForNumber(regLabel)
+        );
+    }
+
+    get(regNum: number): Register {
+        return this._registers[regNum];
+    }
+
+    getState(): [number, string, string][] {
+        return this._registers.map(
+            reg => [reg.number(), reg.label(), reg.value()]
+        );
+    }
+}
+
 export {
-    Register
+    Register,
+    RegisterBank
 };
