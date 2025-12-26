@@ -11,8 +11,8 @@ function SimulatorComponent() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const simulator = new Simulator(assemblyCode);
         try {
+            const simulator = new Simulator(assemblyCode);
             simulator.run();
             const registersState = simulator.getRegistersState();
             const outputLines = registersState.map(
@@ -58,7 +58,17 @@ function SimulatorComponent() {
                     </tr>
                 </thead>
                 <tbody>
-                    {output}
+                    {output || Simulator.blankState().map(
+                        ([num, label, binValue, decValue, hexValue]) => (
+                            <tr>
+                                <td>{label}</td>
+                                <td>${num}</td>
+                                <td><p className="encodes-container">{binValue}</p></td>
+                                <td><p className="encodes-container">{decValue}</p></td>
+                                <td><p className="encodes-container">{hexValue}</p></td>
+                            </tr>
+                        )
+                    )}
                 </tbody>
             </Table>
         </>

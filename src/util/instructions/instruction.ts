@@ -56,6 +56,9 @@ class RFormatInstruction extends Instruction {
             this._rt = regBank.get(Register.parseRegisterForNumber(parts[3]).number());
             this._shamt = null;
         }
+        if (this._rd.number() === 0) {
+            throw new Error(`Cannot write to register $zero: "${this._instr}".`);
+        }
     }
 
     rsValue(): string | null {
@@ -149,6 +152,9 @@ class IFormatInstruction extends Instruction {
             this._rt = regBank.get(Register.parseRegisterForNumber(parts[1]).number());
             this._rs = regBank.get(Register.parseRegisterForNumber(parts[2]).number());
             this._immediate = Immediate.makeSignedImmediate(parts[3]);
+        }
+        if (this._rt.number() === 0) {
+            throw new Error(`Cannot write to register $zero: "${this._instr}".`);
         }
     }
 
