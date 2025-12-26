@@ -16,8 +16,16 @@ function SimulatorComponent() {
             simulator.run();
             const registersState = simulator.getRegistersState();
             const outputLines = registersState.map(
-                ([num, label, binValue, decValue, hexValue]) => (
-                    <tr>
+                ([num, label, binValue, decValue, hexValue, isModified]) => isModified ? (
+                    <tr key={num} style={{ fontWeight: "bold" }}>
+                        <td style={{ color: "red" }}>{label}</td>
+                        <td style={{ color: "red" }}>${num}</td>
+                        <td><p className="encodes-container" style={{ color: "red" }}>{binValue}</p></td>
+                        <td><p className="encodes-container" style={{ color: "red" }}>{decValue}</p></td>
+                        <td><p className="encodes-container" style={{ color: "red" }}>{hexValue}</p></td>
+                    </tr>
+                ) : (
+                    <tr key={num}>
                         <td>{label}</td>
                         <td>${num}</td>
                         <td><p className="encodes-container">{binValue}</p></td>

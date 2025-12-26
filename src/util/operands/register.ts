@@ -1,4 +1,5 @@
 import { TwoWayMap } from "../dsa/map.ts";
+import { bin32BitToHex, binary32BitToSignedInt } from "./numbers.ts";
 
 class TwoWayMapRegisterToNumber extends TwoWayMap<string, number> {
     getNumber(reg: string): number | undefined {
@@ -26,6 +27,7 @@ class Register {
     private readonly _label: string;
     private readonly _number: number;
     private readonly _binaryString: string;
+    private _modified: boolean = false;
     private _binValue: string = "0".repeat(32);
     static readonly registerMapping: TwoWayMapRegisterToNumber = new TwoWayMapRegisterToNumber([
         ["$zero", 0],
@@ -117,6 +119,11 @@ class Register {
     
     setValue(binValue: string): void {
         this._binValue = binValue;
+        this._modified = true;
+    }
+
+    isModified(): boolean {
+        return this._modified;
     }
 }
 
@@ -133,9 +140,9 @@ class RegisterBank {
         return this._registers[regNum];
     }
 
-    getState(): [number, string, string, string, string][] {
+    getState(): [number, string, string, string, string, boolean][] {
         return this._registers.map(
-            reg => [reg.number(), reg.label(), reg.value(), parseInt(reg.value(), 2).toString(10), parseInt(reg.value(), 2).toString(16).toUpperCase().padStart(8, "0")]
+            reg => [reg.number(), reg.label(), reg.value(), binary32BitToSignedInt(reg.value()).toString(), bin32BitToHex(reg.value()), reg.isModified()]
         );
     }
 }

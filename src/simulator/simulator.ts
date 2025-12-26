@@ -22,11 +22,11 @@ class Simulator {
         }
     }
 
-    getRegistersState(): [number, string, string, string, string][] {
+    getRegistersState(): [number, string, string, string, string, boolean][] {
         return this.registers.getState();
     }
 
-    static blankState(): [number, string, string, string, string][] {
+    static blankState(): [number, string, string, string, string, boolean][] {
         const regBank = new RegisterBank();
         return regBank.getState();
     }
