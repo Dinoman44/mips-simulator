@@ -27,13 +27,48 @@ span.rd {
 }
 
 span.rt {
-    color: #0b89bf;
+    color: #0bbf95;
 }
 
 span.rs {
-    color: #60b2d2;
+    color: #60a1d2;
 }
 
 span.immediate, span.shamt {
     color: #da744f;
+}
+
+@media (prefers-color-scheme: light) {
+    p.encodes-container {
+        background-color: #f5f5f5;
+        color: #111;
+    }
+
+    span.address {
+        color: #800080;
+    }
+
+    span.opcode, span.funct, span.instr {
+        color: #0000FF;
+    }
+
+    span.opcode, span.instr {
+        font-weight: bolder;
+    }
+
+    span.rd {
+        color: #008000;
+    }
+
+    span.rt {
+        color: #0b89bf;
+    }
+
+    span.rs {
+        color: #0f4f69;
+    }
+
+    span.immediate, span.shamt {
+        color: #FF4500;
+    }
 }
