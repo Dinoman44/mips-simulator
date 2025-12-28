@@ -105,7 +105,7 @@ function SimulatorComponent() {
                                 <tbody>
                                     {programCounters.map(([pc, instr]) => (
                                         <tr key={pc}>
-                                            <td>{pc}</td>
+                                            <td><p className="encodes-container">{pc}</p></td>
                                             <td><p className="encodes-container">{instr}</p></td>
                                         </tr>
                                     ))}

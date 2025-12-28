@@ -30,7 +30,7 @@ class Simulator {
         const pcStates: [string, string][] = [];
         let address = new ProgramCounter();
         while (this.instructions.get(address.getCounter())) {
-            pcStates.push([address.getCounter(), this.instructions.get(address.getCounter())!.toString()]);
+            pcStates.push(["0x" + address.getCounter(), this.instructions.get(address.getCounter())!.toString()]);
             address.next();
         }
         return pcStates;
