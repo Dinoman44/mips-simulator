@@ -7,6 +7,7 @@ import "../styles/encodes.css";
 function SimulatorComponent() {
     const [assemblyCode, setAssemblyCode] = useState("");
     const [programCounters, setProgramCounters] = useState<[string, string][] | null>(null);
+    const [executionHistory, setExecutionHistory] = useState<[string, string][] | null>(null);
     const [output, setOutput] = useState<React.JSX.Element[] | null>(null);
     const [error, setError] = useState<string | null>(null);
 
@@ -17,6 +18,7 @@ function SimulatorComponent() {
             const programCounters = simulator.getProgramCounters();
             setProgramCounters(programCounters);
             simulator.run();
+            setExecutionHistory(simulator.getExecutionHistory());
             const registersState = simulator.getRegistersState();
             const outputLines = registersState.sort(
                 (a, b) => a[6] === b[6] ? a[0] - b[0] : a[6] ? -1 : 1
@@ -116,6 +118,29 @@ function SimulatorComponent() {
                                 </tbody>
                             </Table>
                         )
+                    }
+                </Tab>
+                <Tab eventKey="execution-history" title="Execution History">
+                    <h4>Execution History</h4>
+                    {
+                        executionHistory && (
+                            <Table responsive>
+                                <thead>
+                                    <tr>
+                                        <th>Program Counter</th>
+                                        <th>Instruction</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {executionHistory.map(([pc, instr], index) => (
+                                        <tr key={index}>
+                                            <td><p className="encodes-container">{pc}</p></td>
+                                            <td><p className="encodes-container">{instr}</p></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        ) || <p>Program not yet executed</p>
                     }
                 </Tab>
             </Tabs>
