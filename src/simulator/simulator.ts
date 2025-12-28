@@ -36,11 +36,11 @@ class Simulator {
         return pcStates;
     }
 
-    getRegistersState(): [number, string, string, string, string, boolean][] {
+    getRegistersState(): [number, string, string, string, string, string, boolean][] {
         return this.registers.getState();
     }
 
-    static blankState(): [number, string, string, string, string, boolean][] {
+    static blankState(): [number, string, string, string, string, string, boolean][] {
         const regBank = new RegisterBank();
         return regBank.getState();
     }

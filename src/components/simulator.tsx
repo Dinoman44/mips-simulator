@@ -19,13 +19,14 @@ function SimulatorComponent() {
             simulator.run();
             const registersState = simulator.getRegistersState();
             const outputLines = registersState.sort(
-                (a, b) => a[5] === b[5] ? a[0] - b[0] : a[5] ? -1 : 1
+                (a, b) => a[6] === b[6] ? a[0] - b[0] : a[6] ? -1 : 1
             ).map(
-                ([num, label, binValue, decValue, hexValue, isModified]) => isModified ? (
+                ([num, label, binValue, decValue, decValueUnsigned, hexValue, isModified]) => isModified ? (
                     <tr key={num} style={{ fontWeight: "bold" }}>
                         <td style={{ color: "red" }}>{label}</td>
                         <td style={{ color: "red" }}>${num}</td>
                         <td><p className="encodes-container" style={{ color: "red" }}>{binValue}</p></td>
+                        <td><p className="encodes-container" style={{ color: "red" }}>{decValueUnsigned}</p></td>
                         <td><p className="encodes-container" style={{ color: "red" }}>{decValue}</p></td>
                         <td><p className="encodes-container" style={{ color: "red" }}>{hexValue}</p></td>
                     </tr>
@@ -34,6 +35,7 @@ function SimulatorComponent() {
                         <td>{label}</td>
                         <td>${num}</td>
                         <td><p className="encodes-container">{binValue}</p></td>
+                        <td><p className="encodes-container">{decValueUnsigned}</p></td>
                         <td><p className="encodes-container">{decValue}</p></td>
                         <td><p className="encodes-container">{hexValue}</p></td>
                     </tr>
@@ -72,17 +74,19 @@ function SimulatorComponent() {
                                 <th>Register Number</th>
                                 <th>Register Label</th>
                                 <th>Register Value (binary)</th>
-                                <th>Register Value (decimal)</th>
+                                <th>Register Value (unsigned decimal)</th>
+                                <th>Register Value (signed decimal)</th>
                                 <th>Register Value (hexadecimal)</th>
                             </tr>
                         </thead>
                         <tbody>
                             {output || Simulator.blankState().map(
-                                ([num, label, binValue, decValue, hexValue]) => (
+                                ([num, label, binValue, decValue, decValueUnsigned, hexValue, _]) => (
                                     <tr>
                                         <td>{label}</td>
                                         <td>${num}</td>
                                         <td><p className="encodes-container">{binValue}</p></td>
+                                        <td><p className="encodes-container">{decValueUnsigned}</p></td>
                                         <td><p className="encodes-container">{decValue}</p></td>
                                         <td><p className="encodes-container">{hexValue}</p></td>
                                     </tr>

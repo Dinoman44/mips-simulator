@@ -140,9 +140,9 @@ class RegisterBank {
         return this._registers[regNum];
     }
 
-    getState(): [number, string, string, string, string, boolean][] {
+    getState(): [number, string, string, string, string, string, boolean][] {
         return this._registers.map(
-            reg => [reg.number(), reg.label(), reg.value(), binary32BitToSignedInt(reg.value()).toString(), bin32BitToHex(reg.value()), reg.isModified()]
+            reg => [reg.number(), reg.label(), "0b" + reg.value(), binary32BitToSignedInt(reg.value()).toString(), parseInt(reg.value(), 2).toString(), "0x" + bin32BitToHex(reg.value()), reg.isModified()]
         );
     }
 }
