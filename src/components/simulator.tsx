@@ -18,7 +18,9 @@ function SimulatorComponent() {
             setProgramCounters(programCounters);
             simulator.run();
             const registersState = simulator.getRegistersState();
-            const outputLines = registersState.map(
+            const outputLines = registersState.sort(
+                (a, b) => a[5] === b[5] ? a[0] - b[0] : a[5] ? -1 : 1
+            ).map(
                 ([num, label, binValue, decValue, hexValue, isModified]) => isModified ? (
                     <tr key={num} style={{ fontWeight: "bold" }}>
                         <td style={{ color: "red" }}>{label}</td>
