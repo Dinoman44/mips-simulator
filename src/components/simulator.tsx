@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Button, Form, Table } from "react-bootstrap";
+import { Alert, Button, Form, Tab, Table, Tabs } from "react-bootstrap";
 import { Simulator } from "../simulator/simulator";
 import "../styles/form.css";
 import "../styles/encodes.css";
@@ -58,51 +58,61 @@ function SimulatorComponent() {
             {error && (
                 <Alert variant="danger">{error}</Alert>
             )}
-            <h4>Program Counters and Instructions</h4>
-            {
-                programCounters && (
+            <Tabs
+                defaultActiveKey="registers"
+                id="output-tabs"
+                className="mb-3"
+            >
+                <Tab eventKey="registers" title="Registers">
                     <Table responsive>
                         <thead>
                             <tr>
-                                <th>Program Counter</th>
-                                <th>Instruction</th>
+                                <th>Register Number</th>
+                                <th>Register Label</th>
+                                <th>Register Value (binary)</th>
+                                <th>Register Value (decimal)</th>
+                                <th>Register Value (hexadecimal)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {programCounters.map(([pc, instr]) => (
-                                <tr key={pc}>
-                                    <td>{pc}</td>
-                                    <td><p className="encodes-container">{instr}</p></td>
-                                </tr>
-                            ))}
+                            {output || Simulator.blankState().map(
+                                ([num, label, binValue, decValue, hexValue]) => (
+                                    <tr>
+                                        <td>{label}</td>
+                                        <td>${num}</td>
+                                        <td><p className="encodes-container">{binValue}</p></td>
+                                        <td><p className="encodes-container">{decValue}</p></td>
+                                        <td><p className="encodes-container">{hexValue}</p></td>
+                                    </tr>
+                                )
+                            )}
                         </tbody>
                     </Table>
-                )
-            }
-            <Table responsive>
-                <thead>
-                    <tr>
-                        <th>Register Number</th>
-                        <th>Register Label</th>
-                        <th>Register Value (binary)</th>
-                        <th>Register Value (decimal)</th>
-                        <th>Register Value (hexadecimal)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {output || Simulator.blankState().map(
-                        ([num, label, binValue, decValue, hexValue]) => (
-                            <tr>
-                                <td>{label}</td>
-                                <td>${num}</td>
-                                <td><p className="encodes-container">{binValue}</p></td>
-                                <td><p className="encodes-container">{decValue}</p></td>
-                                <td><p className="encodes-container">{hexValue}</p></td>
-                            </tr>
+                </Tab>
+                <Tab eventKey="program-counters" title="Program Counters">
+                    <h4>Program Counters and Instructions</h4>
+                    {
+                        programCounters && (
+                            <Table responsive>
+                                <thead>
+                                    <tr>
+                                        <th>Program Counter</th>
+                                        <th>Instruction</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {programCounters.map(([pc, instr]) => (
+                                        <tr key={pc}>
+                                            <td>{pc}</td>
+                                            <td><p className="encodes-container">{instr}</p></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
                         )
-                    )}
-                </tbody>
-            </Table>
+                    }
+                </Tab>
+            </Tabs>
         </>
     )
 }
