@@ -8,6 +8,7 @@ class Simulator {
     private instructions: Map<string, Instruction>;
     private pc: ProgramCounter = new ProgramCounter();
     private executionHistory: [string, string, Array<any>][] = [];
+    private numInstructionsExecuted: number = 0;
 
     constructor(code: string) {
         const instructions = parseCode(code, this.registers);
@@ -22,8 +23,10 @@ class Simulator {
     run(): void {
         while (this.instructions.get(this.pc.getCounter())) {
             const instr: Instruction = this.instructions.get(this.pc.getCounter())!;
-            this.executionHistory.push(["0x" + this.pc.getCounter(), instr.toString(), this.getModifiedRegistersState()]);
+            this.executionHistory.push(["0x" + this.pc.getCounter(), instr.toString(), []]);
             instr.executeInstruction(this.pc);
+            this.executionHistory[this.numInstructionsExecuted][2] = this.getModifiedRegistersState();
+            this.numInstructionsExecuted++;
         }
     }
 

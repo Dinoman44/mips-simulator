@@ -1,13 +1,69 @@
 import { useState } from "react";
-import { Alert, Button, Form, Tab, Table, Tabs } from "react-bootstrap";
+import { Alert, Button, Form, Modal, Tab, Table, Tabs } from "react-bootstrap";
 import { Simulator } from "../simulator/simulator";
 import "../styles/form.css";
 import "../styles/encodes.css";
 
+function ModalAndButton(props: {idx: number, modifiedRegs: any[], instr: string, pc: string}) {
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    return (
+        <>
+            <Button variant="primary" onClick={handleShow} key={props.idx}>
+                View state
+            </Button>
+
+            <Modal show={show} onHide={handleClose} size="lg" dialogClassName="big-modal" key={props.idx}>
+                <Modal.Header closeButton>
+                    <Modal.Title>State</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Instruction: <strong>{props.instr}</strong></p>
+                    <p>Program Counter: <strong>{props.pc}</strong></p>
+                    <Table responsive>
+                        <thead>
+                            <tr>
+                                <th>Register Number</th>
+                                <th>Register Label</th>
+                                <th>Register Value (binary)</th>
+                                <th>Register Value (unsigned decimal)</th>
+                                <th>Register Value (signed decimal)</th>
+                                <th>Register Value (hexadecimal)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {props.modifiedRegs.map(
+                                ([num, label, binValue, decValue, decValueUnsigned, hexValue]) => (
+                                    <tr key={num}>
+                                        <td>{label}</td>
+                                        <td>${num}</td>
+                                        <td><p className="encodes-container">{binValue}</p></td>
+                                        <td><p className="encodes-container">{decValueUnsigned}</p></td>
+                                        <td><p className="encodes-container">{decValue}</p></td>
+                                        <td><p className="encodes-container">{hexValue}</p></td>
+                                    </tr>
+                                )
+                            )}
+                        </tbody>
+                    </Table>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </>
+    );
+}
+
 function SimulatorComponent() {
     const [assemblyCode, setAssemblyCode] = useState("");
     const [programCounters, setProgramCounters] = useState<[string, string][] | null>(null);
-    const [executionHistory, setExecutionHistory] = useState<[string, string][] | null>(null);
+    const [executionHistory, setExecutionHistory] = useState<[string, string, Array<any>][] | null>(null);
     const [output, setOutput] = useState<React.JSX.Element[] | null>(null);
     const [error, setError] = useState<string | null>(null);
 
@@ -124,24 +180,28 @@ function SimulatorComponent() {
                     <h4>Execution History</h4>
                     {
                         executionHistory && (
-                            <Table responsive>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Program Counter</th>
-                                        <th>Instruction</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {executionHistory.map(([pc, instr], index) => (
-                                        <tr key={index}>
-                                            <th>{index + 1}</th>
-                                            <td><p className="encodes-container">{pc}</p></td>
-                                            <td><p className="encodes-container">{instr}</p></td>
+                            <>
+                                <Table responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Program Counter</th>
+                                            <th>Instruction</th>
+                                            <th>Modified Registers States</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </Table>
+                                    </thead>
+                                    <tbody>
+                                        {executionHistory.map(([pc, instr, modifiedRegs], index) => (
+                                            <tr key={index}>
+                                                <th>{index + 1}</th>
+                                                <td><p className="encodes-container">{pc}</p></td>
+                                                <td><p className="encodes-container">{instr}</p></td>
+                                                <td><ModalAndButton idx={index} modifiedRegs={modifiedRegs} instr={instr} pc={pc} /></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            </>
                         ) || <p>Program not yet executed</p>
                     }
                 </Tab>
