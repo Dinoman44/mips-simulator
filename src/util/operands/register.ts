@@ -145,6 +145,14 @@ class RegisterBank {
             reg => [reg.number(), reg.label(), "0b" + reg.value(), binary32BitToSignedInt(reg.value()).toString(), parseInt(reg.value(), 2).toString(), "0x" + bin32BitToHex(reg.value()), reg.isModified()]
         );
     }
+
+    getStateModifiedOnly(): [number, string, string, string, string, string][] {
+        return this.getState().filter(
+            regState => regState[6]
+        ).map(
+            regState => regState.slice(0, 6) as [number, string, string, string, string, string]
+        );
+    }
 }
 
 export {
