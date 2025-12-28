@@ -127,6 +127,7 @@ function SimulatorComponent() {
                             <Table responsive>
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th>Program Counter</th>
                                         <th>Instruction</th>
                                     </tr>
@@ -134,6 +135,7 @@ function SimulatorComponent() {
                                 <tbody>
                                     {executionHistory.map(([pc, instr], index) => (
                                         <tr key={index}>
+                                            <th>{index + 1}</th>
                                             <td><p className="encodes-container">{pc}</p></td>
                                             <td><p className="encodes-container">{instr}</p></td>
                                         </tr>

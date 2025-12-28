@@ -22,10 +22,9 @@ class Simulator {
     run(): void {
         while (this.instructions.get(this.pc.getCounter())) {
             const instr: Instruction = this.instructions.get(this.pc.getCounter())!;
-            this.executionHistory.push([this.pc.getCounter(), instr.toString()]);
+            this.executionHistory.push(["0x" + this.pc.getCounter(), instr.toString()]);
             instr.executeInstruction(this.pc);
         }
-        console.log(this.pc.getCounter());
     }
 
     getProgramCounters(): [string, string][] {
