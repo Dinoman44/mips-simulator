@@ -2,6 +2,7 @@ import { Register, RegisterBank } from "../../util/operands/register.ts";
 import { Immediate } from "../../util/operands/immediate.ts";
 import * as rop from "../../simulator/operations/r-format-operations.ts";
 import * as iop from "../../simulator/operations/i-format-operations.ts";
+import * as jop from "../../simulator/operations/j-format-operations.ts";
 import { BranchInstructionList, IFormatInstructionList, JFormatInstructionList, MemOpInstructionList, RFormatInstructionList, ShiftInstructionList, UnsignedIFormatInstructionList } from "../../util/instructions/instruction-list.ts";
 import { ProgramCounter } from "../../simulator/program-counter.ts";
 
@@ -222,15 +223,21 @@ class IFormatInstruction extends Instruction {
 }
 
 class JFormatInstruction extends Instruction {
-    private _address: number;
+    private _address: Immediate;
 
     constructor(instr: string, parts: string[]) {
         super(instr, parts);
-        this._address = parseInt(parts[1], 10);
+        this._address = Immediate.makeUnsignedImmediate(parts[1], 26);
     }
 
-    addressValue(): number {
-        return this._address;
+    executeInstruction(pc: ProgramCounter): void {
+        switch (this._op) {
+            case "j":
+                jop.jump(this._address.hexString(), pc);
+                break;
+            default:
+                throw new Error(`J-format operation "${this._op}" is unknown.`);
+        }
     }
 }
 

@@ -23,8 +23,8 @@ class ProgramCounter {
         this.counter = this.counter.add(4).add(immediate.mult(4));
     }
 
-    jump(hexAddress: string): void {
-        this.counter = Immediate.makeUnsignedImmediate(hexAddress, 32);
+    jump(binAddress: string): void {
+        this.counter = Immediate.makeUnsignedImmediate(binAddress, 32);
     }
 }
 
