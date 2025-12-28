@@ -72,8 +72,13 @@ class Immediate {
         return this._32bitBinaryString;
     }
 
-    add(imm: Immediate): Immediate {
-        const result = this._value + imm.value();
+    add(imm: number | Immediate): Immediate {
+        const result = this._value + (imm instanceof Immediate ? imm.value() : imm);
+        return Immediate.makeSignedImmediate(result.toString(), this._width);
+    }
+
+    mult(factor: number | Immediate): Immediate {
+        const result = this._value * (factor instanceof Immediate ? factor.value() : factor);
         return Immediate.makeSignedImmediate(result.toString(), this._width);
     }
 }

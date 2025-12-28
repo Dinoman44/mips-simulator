@@ -20,7 +20,7 @@ class ProgramCounter {
     }
 
     branch(immediate: Immediate): void {
-        this.counter = this.counter.add(immediate).add(Immediate.makeUnsignedImmediate("0b100", 32));
+        this.counter = this.counter.add(4).add(immediate.mult(4));
     }
 
     jump(hexAddress: string): void {

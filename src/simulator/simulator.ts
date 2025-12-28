@@ -25,6 +25,7 @@ class Simulator {
             this.executionHistory.push([this.pc.getCounter(), instr.toString()]);
             instr.executeInstruction(this.pc);
         }
+        console.log(this.pc.getCounter());
     }
 
     getProgramCounters(): [string, string][] {
