@@ -71,6 +71,11 @@ class Immediate {
     fullBinaryString(): string {
         return this._32bitBinaryString;
     }
+
+    add(imm: Immediate): Immediate {
+        const result = this._value + imm.value();
+        return Immediate.makeSignedImmediate(result.toString(), this._width);
+    }
 }
 
 

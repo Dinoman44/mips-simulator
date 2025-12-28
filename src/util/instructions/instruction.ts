@@ -3,6 +3,7 @@ import { Immediate } from "../../util/operands/immediate.ts";
 import * as rop from "../../simulator/operations/r-format-operations.ts";
 import * as iop from "../../simulator/operations/i-format-operations.ts";
 import { BranchInstructionList, IFormatInstructionList, JFormatInstructionList, MemOpInstructionList, RFormatInstructionList, ShiftInstructionList, UnsignedIFormatInstructionList } from "../../util/instructions/instruction-list.ts";
+import { ProgramCounter } from "../../simulator/program-counter.ts";
 
 class Instruction {
     protected _instr: string;
@@ -36,7 +37,7 @@ class Instruction {
         return this._instr;
     }
 
-    executeInstruction(): void {}
+    executeInstruction(_: ProgramCounter): void {}
 }
 
 class RFormatInstruction extends Instruction {
@@ -81,7 +82,7 @@ class RFormatInstruction extends Instruction {
         return this._shamt ? this._shamt.value() : null;
     }
 
-    executeInstruction(): void {
+    executeInstruction(pc: ProgramCounter): void {
         switch (this._op) {
             case "add":
                 rop.add(this._rd, this._rs!, this._rt);
@@ -119,6 +120,7 @@ class RFormatInstruction extends Instruction {
             default:
                 throw new Error(`R-format operation "${this._op}" is unknown.`);
         }
+        pc.next();
     }
 }
 
@@ -151,14 +153,17 @@ class IFormatInstruction extends Instruction {
                 this._rs = regBank.get(Register.parseRegisterForNumber(parts[2]).number());
                 this._immediate = Immediate.makeUnsignedImmediate(parts[3], 16);
             }
+            if (this._rt.number() === 0) {
+                throw new Error(`Cannot write to register $zero: "${this._instr}".`);
+            }
         } else {
             // signed I-format: instr rt, rs, immediate
             this._rt = regBank.get(Register.parseRegisterForNumber(parts[1]).number());
             this._rs = regBank.get(Register.parseRegisterForNumber(parts[2]).number());
             this._immediate = Immediate.makeSignedImmediate(parts[3]);
-        }
-        if (this._rt.number() === 0) {
-            throw new Error(`Cannot write to register $zero: "${this._instr}".`);
+            if (this._rt.number() === 0) {
+                throw new Error(`Cannot write to register $zero: "${this._instr}".`);
+            }
         }
     }
 
@@ -174,40 +179,41 @@ class IFormatInstruction extends Instruction {
         return this._immediate.value();
     }
 
-    executeInstruction(): void {
+    executeInstruction(pc: ProgramCounter): void {
         switch (this._op) {
             case "addi":
                 iop.addi(this._rt, this._rs!, this._immediate);
+                pc.next();
                 break;
             case "addiu":
                 iop.addiu(this._rt, this._rs!, this._immediate);
+                pc.next();
                 break;
             case "andi":
                 iop.andi(this._rt, this._rs!, this._immediate);
+                pc.next();
                 break;
             case "lui":
                 iop.lui(this._rt, this._immediate);
+                pc.next();
                 break;
             case "ori":
                 iop.ori(this._rt, this._rs!, this._immediate);
+                pc.next();
                 break;
             case "slti":
                 iop.slti(this._rt, this._rs!, this._immediate);
+                pc.next();
                 break;
             case "sltiu":
                 iop.sltiu(this._rt, this._rs!, this._immediate);
+                pc.next();
                 break;
             case "beq":
-                throw new Error(`Branch instruction "beq" execution not implemented.`);
+                iop.beq(this._rs!, this._rt, this._immediate, pc);
                 break;
             case "bne":
-                throw new Error(`Branch instruction "bne" execution not implemented.`);
-                break;
-            case "lw":
-                throw new Error(`Memory operation "lw" execution not implemented.`);
-                break;
-            case "sw":
-                throw new Error(`Memory operation "sw" execution not implemented.`);
+                iop.bne(this._rs!, this._rt, this._immediate, pc);
                 break;
             default:
                 throw new Error(`I-format operation "${this._op}" is unknown.`);

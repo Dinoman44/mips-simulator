@@ -1,6 +1,7 @@
 import { Register } from "../../util/operands/register";
 import { binary32BitToSignedInt } from "../../util/operands/numbers";
 import { Immediate } from "../../util/operands/immediate";
+import { ProgramCounter } from "../program-counter";
 
 function addi(rt: Register, rs: Register, immediate: Immediate): void {
     const result = binary32BitToSignedInt(rs.value()) + binary32BitToSignedInt(immediate.fullBinaryString());
@@ -40,6 +41,16 @@ function sltiu(rt: Register, rs: Register, immediate: Immediate): void {
     rt.setValue(Immediate.makeUnsignedImmediate(result.toString(), 32).fullBinaryString());
 }
 
+function beq(rs: Register, rt: Register, immediate: Immediate, pc: ProgramCounter): void {
+    if (rs.value() === rt.value()) pc.branch(immediate);
+    else pc.next();
+}
+
+function bne(rs: Register, rt: Register, immediate: Immediate, pc: ProgramCounter): void {
+    if (rs.value() !== rt.value()) pc.branch(immediate);
+    else pc.next();
+}
+
 export {
     addi,
     addiu,
@@ -47,5 +58,7 @@ export {
     lui,
     ori,
     slti,
-    sltiu
+    sltiu,
+    beq,
+    bne
 };

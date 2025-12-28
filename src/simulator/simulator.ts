@@ -7,6 +7,7 @@ class Simulator {
     private registers: RegisterBank = new RegisterBank();
     private instructions: Map<string, Instruction>;
     private pc: ProgramCounter = new ProgramCounter();
+    private executionHistory: [string, string][] = [];
 
     constructor(code: string) {
         const instructions = parseCode(code, this.registers);
@@ -21,8 +22,8 @@ class Simulator {
     run(): void {
         while (this.instructions.get(this.pc.getCounter())) {
             const instr: Instruction = this.instructions.get(this.pc.getCounter())!;
-            instr.executeInstruction();
-            this.pc.next();
+            this.executionHistory.push([this.pc.getCounter(), instr.toString()]);
+            instr.executeInstruction(this.pc);
         }
     }
 
@@ -38,6 +39,10 @@ class Simulator {
 
     getRegistersState(): [number, string, string, string, string, string, boolean][] {
         return this.registers.getState();
+    }
+
+    getExecutionHistory(): [string, string][] {
+        return this.executionHistory;
     }
 
     static blankState(): [number, string, string, string, string, string, boolean][] {
