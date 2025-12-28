@@ -1,26 +1,25 @@
 p.encodes-container {
     font-family: "Courier New", Courier, monospace;
     font-size: 14px;
-    background-color: #f5f5f5;
+    background-color: #0d0d0d;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #8d8b8b;
     border-radius: 4px;
     overflow-x: auto;
     font-weight: 800;
-    color: #111;
+    color: #eee;
 }
 
 span.address {
-    color: #800080;
+    color: #d151d1;
 }
 
-span.opcode {
-    color: #0000FF;
+span.opcode, span.funct, span.instr {
+    color: #8e8eef;
+}
+
+span.opcode, span.instr {
     font-weight: bolder;
-}
-
-span.funct, span.instr {
-    color: #0000FF;
 }
 
 span.rd {
@@ -32,9 +31,9 @@ span.rt {
 }
 
 span.rs {
-    color: #0f4f69;
+    color: #60b2d2;
 }
 
 span.immediate, span.shamt {
-    color: #FF4500;
+    color: #da744f;
 }
