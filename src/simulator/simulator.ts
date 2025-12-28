@@ -26,6 +26,16 @@ class Simulator {
         }
     }
 
+    getProgramCounters(): [string, string][] {
+        const pcStates: [string, string][] = [];
+        let address = new ProgramCounter();
+        while (this.instructions.get(address.getCounter())) {
+            pcStates.push([address.getCounter(), this.instructions.get(address.getCounter())!.toString()]);
+            address.next();
+        }
+        return pcStates;
+    }
+
     getRegistersState(): [number, string, string, string, string, boolean][] {
         return this.registers.getState();
     }

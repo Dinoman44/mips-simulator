@@ -6,6 +6,7 @@ import "../styles/encodes.css";
 
 function SimulatorComponent() {
     const [assemblyCode, setAssemblyCode] = useState("");
+    const [programCounters, setProgramCounters] = useState<[string, string][] | null>(null);
     const [output, setOutput] = useState<React.JSX.Element[] | null>(null);
     const [error, setError] = useState<string | null>(null);
 
@@ -13,6 +14,8 @@ function SimulatorComponent() {
         e.preventDefault();
         try {
             const simulator = new Simulator(assemblyCode);
+            const programCounters = simulator.getProgramCounters();
+            setProgramCounters(programCounters);
             simulator.run();
             const registersState = simulator.getRegistersState();
             const outputLines = registersState.map(
@@ -55,6 +58,27 @@ function SimulatorComponent() {
             {error && (
                 <Alert variant="danger">{error}</Alert>
             )}
+            <h4>Program Counters and Instructions</h4>
+            {
+                programCounters && (
+                    <Table responsive>
+                        <thead>
+                            <tr>
+                                <th>Program Counter</th>
+                                <th>Instruction</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {programCounters.map(([pc, instr]) => (
+                                <tr key={pc}>
+                                    <td>{pc}</td>
+                                    <td><p className="encodes-container">{instr}</p></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                )
+            }
             <Table responsive>
                 <thead>
                     <tr>

@@ -32,6 +32,10 @@ class Instruction {
         return this._op;
     }
 
+    toString(): string {
+        return this._instr;
+    }
+
     executeInstruction(): void {}
 }
 
