@@ -193,6 +193,18 @@ class IFormatInstruction extends Instruction {
             case "sltiu":
                 iop.sltiu(this._rt, this._rs!, this._immediate);
                 break;
+            case "beq":
+                throw new Error(`Branch instruction "beq" execution not implemented.`);
+                break;
+            case "bne":
+                throw new Error(`Branch instruction "bne" execution not implemented.`);
+                break;
+            case "lw":
+                throw new Error(`Memory operation "lw" execution not implemented.`);
+                break;
+            case "sw":
+                throw new Error(`Memory operation "sw" execution not implemented.`);
+                break;
             default:
                 throw new Error(`I-format operation "${this._op}" is unknown.`);
         }

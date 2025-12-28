@@ -1,24 +1,28 @@
 import { RegisterBank } from "../util/operands/register";
-import { Immediate } from "../util/operands/immediate";
 import { Instruction } from "../util/instructions/instruction";
 import { parseCode } from "./parser";
+import { ProgramCounter } from "./program-counter";
 
 class Simulator {
     private registers: RegisterBank = new RegisterBank();
-    private instructions: Instruction[];
-    private pc: Immediate = Immediate.makeUnsignedImmediate("0", 32);
-    private instructionCounters: Immediate[];
+    private instructions: Map<string, Instruction>;
+    private pc: ProgramCounter = new ProgramCounter();
 
     constructor(code: string) {
-        this.instructions = parseCode(code, this.registers);
-        this.instructionCounters = this.instructions.map((_, index: number) =>
-            Immediate.makeUnsignedImmediate((index * 4).toString(), 32)
-        );
+        const instructions = parseCode(code, this.registers);
+        this.instructions = new Map();
+        let address = new ProgramCounter();
+        for (const instruction of instructions) {
+            this.instructions.set(address.getCounter(), instruction);
+            address.next();
+        }
     }
 
     run(): void {
-        for (const instruction of this.instructions) {
-            instruction.executeInstruction();
+        while (this.instructions.get(this.pc.getCounter())) {
+            const instr: Instruction = this.instructions.get(this.pc.getCounter())!;
+            instr.executeInstruction();
+            this.pc.next();
         }
     }
 
