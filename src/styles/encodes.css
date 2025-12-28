@@ -38,11 +38,6 @@ span.immediate, span.shamt {
     color: #da744f;
 }
 
-.big-modal {
-    max-width: 90% !important;
-    width: auto;
-}
-
 @media (prefers-color-scheme: light) {
     p.encodes-container {
         background-color: #f5f5f5;

@@ -16,7 +16,7 @@ function ModalAndButton(props: {idx: number, modifiedRegs: any[], instr: string,
                 View state
             </Button>
 
-            <Modal show={show} onHide={handleClose} size="lg" dialogClassName="big-modal" key={props.idx}>
+            <Modal show={show} onHide={handleClose} size="xl" dialogClassName="big-modal" key={props.idx}>
                 <Modal.Header closeButton>
                     <Modal.Title>State</Modal.Title>
                 </Modal.Header>
